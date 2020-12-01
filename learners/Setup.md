@@ -23,7 +23,7 @@ Use PuTTY
 
 ## For MacOS
 
-Use Terminal.app
+Use Terminal.app or iTerm2
 
 :::::::::::::::::::::::::
 
