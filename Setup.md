@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 0e4e4d7028efbf7d756a08217126884f
+sandpaper-digest: 12437c18e8b29e87d73e87c3a4bdb68b
 sandpaper-source: /Users/runner/work/testme/testme/learners/Setup.md
 
 title: Setup
@@ -26,7 +26,7 @@ Use PuTTY
 
 ## For MacOS
 
-Use Terminal.app
+Use Terminal.app or iTerm2
 
 :::::::::::::::::::::::::
 
