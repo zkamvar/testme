@@ -43,5 +43,5 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          echo hey
           Rscript -e 'sandpaper:::ci_build_markdown()'
+          Rscript -e 'sandpaper:::ci_build_site()'
