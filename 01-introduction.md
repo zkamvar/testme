@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: a86a4aa4566306995cf7b76d6d2084db
+sandpaper-digest: 29b3569db09905e34ad0f3ff2d30437f
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -29,15 +29,11 @@ part of the html page.
 
 :::::::::::::::: questions :::::::::::::::::::::
 
-## Questions
-
 - How do you write a lesson using RMarkdown and `{sandpaper}`?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::: objectives ::::::::::::::::::::
-
-## Objectives
 
 - Explain how to use markdown with the new lesson template
 - Demonstrate how to include pieces of code, figures, and nested challenge blocks
@@ -46,8 +42,6 @@ part of the html page.
 
 :::::::::::::::: keypoints :::::::::::::::::::::
 
-## Keypoints
-
 - Use `.Rmd` files for lessons even if you don't need to generate any code
 - Run `sandpaper::check_lesson()` to identify any issues with your lesson
 - Run `sandpaper::build_lesson()` to preview your lesson locally
@@ -55,6 +49,12 @@ part of the html page.
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 ::::::::::::::: challenge ::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: instructor
+
+This is an instructor aside, in the future, you should be able to hide this
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 ## Challenge 1: Can you do it?
 
@@ -67,8 +67,6 @@ paste("This", "new", "template", "looks", "good")
 
 :::::::::::::::::::::::: solution 
 
-## Output
- 
 
 ```{.output}
 [1] "This new template looks good"
