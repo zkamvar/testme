@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 29b3569db09905e34ad0f3ff2d30437f
+sandpaper-digest: af5a3c7f8343aa5f122aa07f62fdfb28
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -48,13 +48,13 @@ part of the html page.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
-::::::::::::::: challenge ::::::::::::::::::::::
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: instructor
 
 This is an instructor aside, in the future, you should be able to hide this
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+::::::::::::::: challenge ::::::::::::::::::::::
 
 ## Challenge 1: Can you do it?
 
