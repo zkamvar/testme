@@ -10,8 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ::::::::::::::::::: questions
 
-## Questions
-
  - how long should this document be? 
 
 :::::::::::::::::::::::::::::::
