@@ -1,11 +1,24 @@
 ---
-sandpaper-digest: af5a3c7f8343aa5f122aa07f62fdfb28
+sandpaper-digest: 776d32b85b95ee007cc6c4c99b3262fa
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
 teaching: 10
 exercises: 2
 ---
+
+:::::::::::::::: questions :::::::::::::::::::::
+
+- How do you write a lesson using RMarkdown and `{sandpaper}`?
+
+::::::::::::::::::::::::::::::::::::::::::::::::
+
+:::::::::::::::: objectives ::::::::::::::::::::
+
+- Explain how to use markdown with the new lesson template
+- Demonstrate how to include pieces of code, figures, and nested challenge blocks
+
+::::::::::::::::::::::::::::::::::::::::::::::::
 
 # Introduction
 
@@ -26,19 +39,6 @@ Carpentries lesson template:
 No matter where these blocks appear, they will always be placed at the right
 part of the html page.
 
-
-:::::::::::::::: questions :::::::::::::::::::::
-
-- How do you write a lesson using RMarkdown and `{sandpaper}`?
-
-::::::::::::::::::::::::::::::::::::::::::::::::
-
-:::::::::::::::: objectives ::::::::::::::::::::
-
-- Explain how to use markdown with the new lesson template
-- Demonstrate how to include pieces of code, figures, and nested challenge blocks
-
-::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::: keypoints :::::::::::::::::::::
 
