@@ -4,6 +4,19 @@ teaching: 10
 exercises: 2
 ---
 
+:::::::::::::::: questions :::::::::::::::::::::
+
+- How do you write a lesson using RMarkdown and `{sandpaper}`?
+
+::::::::::::::::::::::::::::::::::::::::::::::::
+
+:::::::::::::::: objectives ::::::::::::::::::::
+
+- Explain how to use markdown with the new lesson template
+- Demonstrate how to include pieces of code, figures, and nested challenge blocks
+
+::::::::::::::::::::::::::::::::::::::::::::::::
+
 # Introduction
 
 This is the new Carpentries template. It is written in [RMarkdown][r-markdown],
@@ -23,19 +36,6 @@ Carpentries lesson template:
 No matter where these blocks appear, they will always be placed at the right
 part of the html page.
 
-
-:::::::::::::::: questions :::::::::::::::::::::
-
-- How do you write a lesson using RMarkdown and `{sandpaper}`?
-
-::::::::::::::::::::::::::::::::::::::::::::::::
-
-:::::::::::::::: objectives ::::::::::::::::::::
-
-- Explain how to use markdown with the new lesson template
-- Demonstrate how to include pieces of code, figures, and nested challenge blocks
-
-::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::: keypoints :::::::::::::::::::::
 
