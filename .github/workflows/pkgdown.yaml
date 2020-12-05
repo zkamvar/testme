@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_github('carpentries/sandpaper@add-lua', dependencies = TRUE)
+          remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Deploy site
