@@ -15,6 +15,9 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           echo ${{ github.ref }}
+          echo ${{ github.repository }}
+          echo ${{ github.head_ref }}
+          echo ${{ github.sha }}
 
 
       # - uses: r-lib/actions/setup-r@v1
