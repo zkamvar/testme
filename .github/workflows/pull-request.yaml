@@ -18,6 +18,8 @@ jobs:
           echo ${{ github.repository }}
           echo ${{ github.head_ref }}
           echo ${{ github.sha }}
+          git branch
+          git status
 
 
       # - uses: r-lib/actions/setup-r@v1
