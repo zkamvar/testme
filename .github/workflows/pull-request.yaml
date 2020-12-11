@@ -1,7 +1,7 @@
 on:
   pull_request
 
-name: sandpaper
+name: "Pull Request"
 
 jobs:
   pkgdown:
