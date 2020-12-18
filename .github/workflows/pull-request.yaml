@@ -1,0 +1,57 @@
+on:
+  pull_request
+
+name: "Pull Request"
+
+jobs:
+  build-md-source:
+    runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: "view token"
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          echo ${{ github.ref }} | awk -F/ '{print $1, $2, $3, $4}'
+          echo repository ${{ github.repository }}
+          echo head_ref ${{ github.head_ref }}
+          echo sha ${{ github.sha }}
+          echo event_name ${{ github.event_name }}
+          git branch
+          git status
+
+
+      # - uses: r-lib/actions/setup-r@v1
+
+      # - uses: r-lib/actions/setup-pandoc@v1
+      #   with:
+      #     pandoc-version: "2.10"
+
+      # - name: Query dependencies
+      #   run: |
+      #     install.packages('remotes')
+      #     install.packages('drat')
+      #     drat:::add('zkamvar')
+      #     saveRDS(remotes::package_deps('sandpaper', dependencies = TRUE), ".github/depends.Rds", version = 2)
+      #     writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+      #   shell: Rscript {0}
+
+      # - name: Cache R packages
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ env.R_LIBS_USER }}
+      #     key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+      #     restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      # - name: Install dependencies
+      #   run: |
+      #     remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
+      #   shell: Rscript {0}
+
+      # - name: Deploy site
+      #   run: |
+      #     git config --local user.email "actions@github.com"
+      #     git config --local user.name "GitHub Actions"
+      #     Rscript -e 'sandpaper:::ci_deploy()'
