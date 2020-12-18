@@ -7,7 +7,7 @@ on:
 name: sandpaper
 
 jobs:
-  pkgdown:
+  full-build:
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -19,6 +19,11 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
         with:
           pandoc-version: "2.10"
+
+      - name: Test if PR
+        if: ${{ github.head_ref }}
+        run: |
+          echo "I'm in a pull request"
 
       - name: Query dependencies
         run: |
@@ -45,5 +50,4 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          echo ${{ github.head_ref }}
           Rscript -e 'sandpaper:::ci_deploy()'
