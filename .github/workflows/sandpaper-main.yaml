@@ -20,11 +20,6 @@ jobs:
         with:
           pandoc-version: "2.10"
 
-      - name: Test if not PR
-        if: ${{ github.head_ref == "" }}
-        run: |
-          echo "I'm in a pull request"
-
       - name: Query dependencies
         run: |
           install.packages('remotes')
