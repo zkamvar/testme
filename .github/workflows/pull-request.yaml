@@ -40,7 +40,7 @@ jobs:
 
       - name: Fetch Rendred Markdown
         run: |
-          git worktree add --track -B gh-pages ${{ github.workspace }}/site/built origin/gh-pages
+          git clone --depth 1 -b md-sources https://github.com/${{ github.repository }}.git ${{ github.workspace }}/site/built
       - name: Generate Diff
         run: |
           git config --local user.email "actions@github.com"
@@ -60,4 +60,4 @@ jobs:
           path: ${{ github.workspace }}/site/res/
 
       - name: Teardown
-        run: git worktree remove --force ${{ github.workspace }}/site/built
+        run: rm -rf ${{ github.workspace }}/site/built
