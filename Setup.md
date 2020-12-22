@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 12437c18e8b29e87d73e87c3a4bdb68b
+sandpaper-digest: 5f398840df593a66fb0ce01fab503185
 sandpaper-source: /Users/runner/work/testme/testme/learners/Setup.md
 
 title: Setup
@@ -13,6 +13,9 @@ data sets the learner needs to have installed. If you want to hide different
 setup instructions, you can use a `solution` tag.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+# Software
+
 
 :::::::::::::::: solution
 
@@ -31,3 +34,6 @@ Use Terminal.app or iTerm2
 :::::::::::::::::::::::::
 
 
+# Data
+
+You can download the data from ...

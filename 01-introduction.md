@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 5ea4f842abd2e0194a74176dbcb7cf42
+sandpaper-digest: dd77d3b5d352666db9b77464fbec6b5a
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -9,7 +9,7 @@ exercises: 2
 
 :::::::::::::::: questions :::::::::::::::::::::
 
-- How do you write a lesson using RMarkdown and `{sandpaper}`?
+- HOW do you write a lesson using RMarkdown and `{sandpaper}`?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -95,7 +95,7 @@ You can also include figures:
 pie(
   c(Sky = 78, "Sunny side of pyramid" = 17, "Shady side of pyramid" = 5), 
   init.angle = 315, 
-  col = c("firebrick", "yellow", "yellow3"), 
+  col = c("firebrick", "wheat", "wheat3"), 
   border = FALSE
 )
 ```
@@ -112,7 +112,7 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 
 Cool, right?
 
-HEY PAT b4a9!
+HEY PAT e619!
 
 <!-- Please do not delete anything below this line -->
 
