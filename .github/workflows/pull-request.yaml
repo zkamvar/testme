@@ -54,17 +54,20 @@ jobs:
         run: |
           git clone --depth 1 -b md-outputs ${{ github.event.repository.git_url }} "$MD"
       - name: Generate Diff
+        env:
+          DIFF: "${CHIVE}/diff.md"
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           Rscript -e 'sandpaper::build_lesson()'
-          mkdir -p "$CHIVE"
-          cd site/built
-          echo "### Rendered Changes\n\n```diff\n" > "${CHIVE}/diff.md"
-          git diff --summary > "${CHIVE}/diff.md"
-          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> "${CHIVE}/diff.md"
-          git diff --oneline >> "${CHIVE}/diff.md"
-          echo "\n```\n\n</details>" >> "${CHIVE}/diff.md"
+          mkdir -p "${CHIVE}"
+          touch "${DIFF}"
+          cd "${MD}"
+          echo "### Rendered Changes\n\n```diff\n" > "${DIFF}"
+          git diff --summary >> "${DIFF}"
+          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> "${DIFF}"
+          git diff --oneline >> "${DIFF}"
+          echo "\n```\n\n</details>" >> "${DIFF}"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
