@@ -10,7 +10,6 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CHIVE: ${{ github.workspace }}/site/chive
       MD: ${{ github.workspace }}/site/built
-      DIFF: ${{ env.CHIVE }}/diff.md
     steps:
       - uses: actions/checkout@v2
       - name: Dump GitHub context
@@ -61,11 +60,11 @@ jobs:
           Rscript -e 'sandpaper::build_lesson()'
           mkdir -p ${{ env.CHIVE }}
           cd ${{ env.MD }}
-          echo "### Rendered Changes\n\n```diff\n" > ${{ env.DIFF }}
-          git diff --summary >> ${{ env.DIFF }}
-          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ${{ env.DIFF }}
-          git diff --oneline >> ${{ env.DIFF }}
-          echo "\n```\n\n</details>" >> ${{ env.DIFF }}
+          echo "### Rendered Changes\n\n```diff\n" > ${{ env.CHIVE }}/diff.md
+          git diff --summary >> ${{ env.CHIVE }}/diff.md
+          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ${{ env.CHIVE }}/diff.md
+          git diff --oneline >> ${{ env.CHIVE }}/diff.md
+          echo "\n```\n\n</details>" >> ${{ env.CHIVE }}/diff.md
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
