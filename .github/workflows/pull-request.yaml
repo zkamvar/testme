@@ -10,54 +10,55 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT" > Rtifact
 
-      - uses: r-lib/actions/setup-r@v1
+      # - uses: r-lib/actions/setup-r@v1
 
-      - uses: r-lib/actions/setup-pandoc@v1
-        with:
-          pandoc-version: "2.10"
+      # - uses: r-lib/actions/setup-pandoc@v1
+      #   with:
+      #     pandoc-version: "2.10"
 
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          install.packages('drat')
-          drat:::add('zkamvar')
-          saveRDS(remotes::package_deps('sandpaper', dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
+      # - name: Query dependencies
+      #   run: |
+      #     install.packages('remotes')
+      #     install.packages('drat')
+      #     drat:::add('zkamvar')
+      #     saveRDS(remotes::package_deps('sandpaper', dependencies = TRUE), ".github/depends.Rds", version = 2)
+      #     writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+      #   shell: Rscript {0}
 
-      - name: Cache R packages
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+      # - name: Cache R packages
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ env.R_LIBS_USER }}
+      #     key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+      #     restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install dependencies
-        run: |
-          remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
-        shell: Rscript {0}
+      # - name: Install dependencies
+      #   run: |
+      #     remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
+      #   shell: Rscript {0}
 
-      - name: Fetch Rendred Markdown
-        run: |
-          git clone --depth 1 -b md-sources https://github.com/${{ github.repository }}.git ${{ github.workspace }}/site/built
-      - name: Generate Diff
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          Rscript -e 'sandpaper::build_lesson()'
-          mkdir -p ${{ github.workspace }}/site/res
-          cd site/built
-          echo "### Rendered Changes\n\n```diff\n" > ../res/diff-summary.txt
-          git diff --summary > ../res/diff-summary.txt
-          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ../res/diff-summary.txt
-          git diff --oneline >> ../res/diff-summary.txt
-          echo "\n```\n\n</details>" >> ../res/diff-summary.txt
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: PR-tifact
-          path: ${{ github.workspace }}/site/res/
-
-      - name: Teardown
-        run: rm -rf ${{ github.workspace }}/site/built
+      # - name: Fetch Rendred Markdown
+      #   run: |
+      #     git worktree add --track -B gh-pages ${{ github.workspace }}/site/built origin/gh-pages
+      # - name: Generate Diff
+      #   run: |
+      #     git config --local user.email "actions@github.com"
+      #     git config --local user.name "GitHub Actions"
+      #     Rscript -e 'sandpaper::build_lesson()'
+      #     mkdir -p ${{ github.workspace }}/site/res
+      #     cd site/built
+      #     echo "### Rendered Changes\n\n```diff\n" > ../res/diff-summary.txt
+      #     git diff --summary > ../res/diff-summary.txt
+      #     echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ../res/diff-summary.txt
+      #     git diff --oneline >> ../res/diff-summary.txt
+      #     echo "\n```\n\n</details>" >> ../res/diff-summary.txt
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: PR-tifact
+      #     path: ${{ github.workspace }}/site/res/
