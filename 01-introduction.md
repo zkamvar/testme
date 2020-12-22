@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 232a2481f579ef2960cadaacf3ca9da2
+sandpaper-digest: 178f0e06c84a6ac8937cc7a6cd88c335
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -111,6 +111,8 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 `$\alpha = \dfrac{1}{(1 - \beta)^2}$` becomes: $\alpha = \dfrac{1}{(1 - \beta)^2}$
 
 Cool, right?
+
+HEY PAT 3864
 
 <!-- Please do not delete anything below this line -->
 
