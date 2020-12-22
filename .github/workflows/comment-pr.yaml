@@ -44,10 +44,10 @@ jobs:
           script: |
             var fs = require('fs');
             var issue_number = Number(fs.readFileSync('./NR'));
-            var content = fs.readFileSync('./diff.md');
+            var body= String(fs.readFileSync('./diff.md', {encoding:'utf8', flag:'r'}));
             await github.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue_number,
-              body: content
+              body: body 
             });
