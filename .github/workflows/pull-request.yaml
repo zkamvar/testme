@@ -62,7 +62,7 @@ jobs:
           cd ${{ env.MD }}
           printf "### Rendered Changes\n\n\`\`\`diff\n" > ${{ env.CHIVE }}/diff.md
           git diff --summary >> ${{ env.CHIVE }}/diff.md
-          printf "\n\`\`\`\n\n<details><summary>Full Diff</summary>\n\n" >> ${{ env.CHIVE }}/diff.md
+          printf "\n\`\`\`\n\n<details><summary>Full Diff</summary>\n\n\`\`\`diff\n" >> ${{ env.CHIVE }}/diff.md
           git diff --oneline >> ${{ env.CHIVE }}/diff.md
           printf "\n\`\`\`\n\n</details>" >> ${{ env.CHIVE }}/diff.md
 
@@ -73,5 +73,5 @@ jobs:
           path: ${{ env.CHIVE }}
 
       - name: Teardown
-        run: sandpaper::clear_site()
+        run: sandpaper::reset_site()
         shell: Rscript {0}

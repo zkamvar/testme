@@ -6,7 +6,7 @@ exercises: 2
 
 :::::::::::::::: questions :::::::::::::::::::::
 
-- How do you write a lesson using RMarkdown and `{sandpaper}`?
+- HOW do you write a lesson using RMarkdown and `{sandpaper}`?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
