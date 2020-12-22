@@ -61,7 +61,6 @@ jobs:
           mkdir -p ${{ env.CHIVE }}
           echo ${{ github.event.number }} > ${{ env.CHIVE }}/NR
           DIFF=${{ env.CHIVE }}/diff.md
-          FILE=""
           DEETS1="\n<details>\n<summary>"
           DEETS2="</summary>\n\n\`\`\`\`\`diff\n"
           DEETS3="\n\`\`\`\`\`\n\n</details>\n" >> $DIFF
