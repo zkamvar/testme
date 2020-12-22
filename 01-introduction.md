@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 178f0e06c84a6ac8937cc7a6cd88c335
+sandpaper-digest: 5ea4f842abd2e0194a74176dbcb7cf42
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -112,7 +112,7 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 
 Cool, right?
 
-HEY PAT 3864
+HEY PAT b4a9!
 
 <!-- Please do not delete anything below this line -->
 
