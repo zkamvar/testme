@@ -10,7 +10,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CHIVE: ${{ github.workspace }}/site/chive
       MD: ${{ github.workspace }}/site/built
-      DIFF: "${CHIVE}/diff.md"
+      DIFF: ${{ env.CHIVE }}/diff.md
     steps:
       - uses: actions/checkout@v2
       - name: Dump GitHub context
@@ -53,26 +53,25 @@ jobs:
 
       - name: Fetch Rendred Markdown
         run: |
-          git clone --depth 1 -b md-outputs ${{ github.event.repository.git_url }} "$MD"
+          git clone --depth 1 -b md-outputs ${{ github.event.repository.git_url }} ${{ env.MD }}
       - name: Generate Diff
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           Rscript -e 'sandpaper::build_lesson()'
-          mkdir -p "${CHIVE}"
-          touch "${DIFF}"
-          cd "${MD}"
-          echo "### Rendered Changes\n\n```diff\n" > "${DIFF}"
-          git diff --summary >> "${DIFF}"
-          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> "${DIFF}"
-          git diff --oneline >> "${DIFF}"
-          echo "\n```\n\n</details>" >> "${DIFF}"
+          mkdir -p ${{ env.CHIVE }}
+          cd ${{ env.MD }}
+          echo "### Rendered Changes\n\n```diff\n" > ${{ env.DIFF }}
+          git diff --summary >> ${{ env.DIFF }}
+          echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ${{ env.DIFF }}
+          git diff --oneline >> ${{ env.DIFF }}
+          echo "\n```\n\n</details>" >> ${{ env.DIFF }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: diff
-          path: "${CHIVE}"
+          path: ${{ env.CHIVE }}
 
       - name: Teardown
         run: sandpaper::clear_site()
