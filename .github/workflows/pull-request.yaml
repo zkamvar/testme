@@ -52,7 +52,7 @@ jobs:
 
       - name: Fetch Rendred Markdown
         run: |
-          git clone --depth 1 -b md-sources ${{ github.event.repository.git_url }} "$MD"
+          git clone --depth 1 -b md-outputs ${{ github.event.repository.git_url }} "$MD"
       - name: Generate Diff
         run: |
           git config --local user.email "actions@github.com"
