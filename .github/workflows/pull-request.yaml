@@ -76,8 +76,10 @@ jobs:
           do
             if [ -e ${FILE} ]; then
               printf ${DEETS1} >> ${DIFF}
-              printf ${FILE} >> ${DIFF}
+              printf "Click here for diff of ${FILE}" >> ${DIFF}
               printf ${DEETS2} >> ${DIFF}
+              # TODO: check for images here and either put a link to the URL of
+              # the preview, show the new image or... something else
               git diff --staged --oneline $FILE >> $DIFF
               printf ${DEETS3} >> ${DIFF}
             fi
