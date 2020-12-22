@@ -1,5 +1,5 @@
 on:
-  pull_request
+  pull_request:
 
 name: "Receive Pull Request"
 
@@ -40,13 +40,13 @@ jobs:
 
       - name: Fetch Rendred Markdown
         run: |
-          git worktree add --track -B gh-pages ${{ GITHUB_WORKSPACE }}/site/built origin/gh-pages
+          git worktree add --track -B gh-pages ${{ github.workspace }}/site/built origin/gh-pages
       - name: Generate Diff
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           Rscript -e 'sandpaper::build_lesson()'
-          mkdir -p site/res
+          mkdir -p ${{ github.workspace }}/site/res
           cd site/built
           echo "### Rendered Changes\n\n```diff\n" > ../res/diff-summary.txt
           git diff --summary > ../res/diff-summary.txt
@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: PR-tifact
-          path: ${{ GITHUB_WORKSPACE }}/site/res/
+          path: ${{ github.workspace }}/site/res/
 
       - name: Teardown
-        run: git worktree remove --force ${{ GITHUB_WORKSPACE }}/site/built
+        run: git worktree remove --force ${{ github.workspace }}/site/built
