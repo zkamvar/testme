@@ -62,8 +62,9 @@ jobs:
           echo ${{ github.event.number }} > ${{ env.CHIVE }}/NR
           DIFF=${{ env.CHIVE }}/diff.md
           FILE=""
-          DEETS1="\n\`\`\`\n\n<details><summary>$FILE</summary>\n\n\`\`\`\`\`diff\n"
-          DEETS2="\n\`\`\`\`\`\n\n</details>\n" >> $DIFF
+          DEETS1="\n<details>\n<summary>"
+          DEETS2="</summary>\n\n\`\`\`\`\`diff\n"
+          DEETS3="\n\`\`\`\`\`\n\n</details>\n" >> $DIFF
           cd ${{ env.MD }}
           git add -A .
           printf "### Rendered Changes\n\n" > $DIFF
@@ -74,10 +75,12 @@ jobs:
           printf "\n### Per-file Breakdown\n"
           for FILE in $(git diff --staged --name-only)
           do
-            if [ -e $FILE ]; then
+            if [ -e ${FILE} ]; then
               printf ${DEETS1} >> ${DIFF}
-              git diff --staged --oneline $FILE >> $DIFF
+              printf ${FILE} >> ${DIFF}
               printf ${DEETS2} >> ${DIFF}
+              git diff --staged --oneline $FILE >> $DIFF
+              printf ${DEETS3} >> ${DIFF}
             fi
           done
 
