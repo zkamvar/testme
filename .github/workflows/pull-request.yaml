@@ -8,6 +8,8 @@ jobs:
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      CHIVE: ${{ github.workspace }}/site/chive
+      MD: ${{ github.workspace }}/site/built
     steps:
       - uses: actions/checkout@v2
       - name: Dump GitHub context
@@ -21,53 +23,74 @@ jobs:
           name: PR-tifact
           path: ${{ github.workspace }}/Rtifact
 
-      # - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@v1
 
-      # - uses: r-lib/actions/setup-pandoc@v1
-      #   with:
-      #     pandoc-version: "2.10"
+      - uses: r-lib/actions/setup-pandoc@v1
+        with:
+          pandoc-version: "2.10"
 
-      # - name: Query dependencies
-      #   run: |
-      #     install.packages('remotes')
-      #     install.packages('drat')
-      #     drat:::add('zkamvar')
-      #     saveRDS(remotes::package_deps('sandpaper', dependencies = TRUE), ".github/depends.Rds", version = 2)
-      #     writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-      #   shell: Rscript {0}
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          install.packages('drat')
+          drat:::add('zkamvar')
+          saveRDS(remotes::package_deps('sandpaper', dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
 
-      # - name: Cache R packages
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ${{ env.R_LIBS_USER }}
-      #     key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-      #     restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      # - name: Install dependencies
-      #   run: |
-      #     remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
-      #   shell: Rscript {0}
+      - name: Install dependencies
+        run: |
+          remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
+        shell: Rscript {0}
 
-      # - name: Fetch Rendred Markdown
-      #   run: |
-      #     git worktree add --track -B gh-pages ${{ github.workspace }}/site/built origin/gh-pages
-      # - name: Generate Diff
-      #   run: |
-      #     git config --local user.email "actions@github.com"
-      #     git config --local user.name "GitHub Actions"
-      #     Rscript -e 'sandpaper::build_lesson()'
-      #     mkdir -p ${{ github.workspace }}/site/res
-      #     cd site/built
-      #     echo "### Rendered Changes\n\n```diff\n" > ../res/diff-summary.txt
-      #     git diff --summary > ../res/diff-summary.txt
-      #     echo "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ../res/diff-summary.txt
-      #     git diff --oneline >> ../res/diff-summary.txt
-      #     echo "\n```\n\n</details>" >> ../res/diff-summary.txt
-      # - name: Upload Artifact
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: PR-tifact
-      #     path: ${{ github.workspace }}/site/res/
+      - name: Fetch Rendred Markdown
+        run: |
+          git clone --depth 1 -b md-outputs ${{ github.event.repository.git_url }} ${{ env.MD }}
+      - name: Generate Diff
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          Rscript -e 'sandpaper::build_lesson()'
+          mkdir -p ${{ env.CHIVE }}
+          echo ${{ github.event.number }} > ${{ env.CHIVE }}/NR
+          DIFF=${{ env.CHIVE }}/diff.md
+          DEETS1="\n<details>\n<summary>"
+          DEETS2="</summary>\n\n\`\`\`\`\`diff\n"
+          DEETS3="\n\`\`\`\`\`\n\n</details>\n" >> $DIFF
+          cd ${{ env.MD }}
+          git add -A .
+          printf "### Rendered Changes\n\n" > $DIFF
+          printf "The following changes were observed in the rendered markdown documents\n" >> $DIFF
+          printf "\n\`\`\`diff\n" >> $DIFF
+          git diff --staged --compact-summary >> $DIFF
+          printf "\n\`\`\`\n" >> $DIFF
+          printf "\n### Per-file Breakdown\n"
+          for FILE in $(git diff --staged --name-only)
+          do
+            if [ -e ${FILE} ]; then
+              printf ${DEETS1} >> ${DIFF}
+              printf "Click here for diff of ${FILE}" >> ${DIFF}
+              printf ${DEETS2} >> ${DIFF}
+              # TODO: check for images here and either put a link to the URL of
+              # the preview, show the new image or... something else
+              git diff --staged --oneline $FILE >> $DIFF
+              printf ${DEETS3} >> ${DIFF}
+            fi
+          done
 
-      # - name: Teardown
-      #   run: git worktree remove --force ${{ github.workspace }}/site/built
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: diff
+          path: ${{ env.CHIVE }}
+
+      - name: Teardown
+        run: sandpaper::reset_site()
+        shell: Rscript {0}
