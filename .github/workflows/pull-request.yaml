@@ -60,11 +60,11 @@ jobs:
           Rscript -e 'sandpaper::build_lesson()'
           mkdir -p ${{ env.CHIVE }}
           cd ${{ env.MD }}
-          printf "### Rendered Changes\n\n```diff\n" > ${{ env.CHIVE }}/diff.md
+          printf "### Rendered Changes\n\n\`\`\`diff\n" > ${{ env.CHIVE }}/diff.md
           git diff --summary >> ${{ env.CHIVE }}/diff.md
-          printf "\n```\n\n<details><summary>Full Diff</summary>\n\n" >> ${{ env.CHIVE }}/diff.md
+          printf "\n\`\`\`\n\n<details><summary>Full Diff</summary>\n\n" >> ${{ env.CHIVE }}/diff.md
           git diff --oneline >> ${{ env.CHIVE }}/diff.md
-          printf "\n```\n\n</details>" >> ${{ env.CHIVE }}/diff.md
+          printf "\n\`\`\`\n\n</details>" >> ${{ env.CHIVE }}/diff.md
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
