@@ -59,12 +59,17 @@ jobs:
           git config --local user.name "GitHub Actions"
           Rscript -e 'sandpaper::build_lesson()'
           mkdir -p ${{ env.CHIVE }}
+          DIFF=${{ env.CHIVE }}/diff.md
           cd ${{ env.MD }}
-          printf "### Rendered Changes\n\n\`\`\`diff\n" > ${{ env.CHIVE }}/diff.md
-          git diff --stat >> ${{ env.CHIVE }}/diff.md
-          printf "\n\`\`\`\n\n<details><summary>Full Diff</summary>\n\n\`\`\`diff\n" >> ${{ env.CHIVE }}/diff.md
-          git diff --oneline >> ${{ env.CHIVE }}/diff.md
-          printf "\n\`\`\`\n\n</details>" >> ${{ env.CHIVE }}/diff.md
+          printf "### Rendered Changes\n\n" > $DIFF
+          printf "The following changes were observed in the rendered markdown documents\n" >> $DIFF
+          printf "\n\`\`\`diff\n" >> $DIFF
+          git diff --stat >> $DIFF
+          printf "\n\`\`\`\n\n<details><summary>" >> $DIFF
+          printf "Click here for the full diff</summary>\n" >> $DIFF
+          printf "\n\`\`\`\`\`diff\n" >> $DIFF
+          git diff --oneline >> $DIFF
+          printf "\n\`\`\`\`\`\n\n</details>" >> $DIFF
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
