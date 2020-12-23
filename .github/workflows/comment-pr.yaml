@@ -50,5 +50,5 @@ jobs:
               repo: context.repo.repo,
               issue_number: issue_number,
               body: body 
-            })[0].id;
+            });
             console.log(id)
