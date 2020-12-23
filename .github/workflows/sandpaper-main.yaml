@@ -41,6 +41,10 @@ jobs:
           remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
         shell: Rscript {0}
 
+      - name: Echo
+        run: |
+          cat("::warning file=episodes/01-introduction.Rmd,line=10,col=5::This is a warning")
+        shell: RScript {0}
       - name: Deploy site
         run: |
           git config --local user.email "actions@github.com"
