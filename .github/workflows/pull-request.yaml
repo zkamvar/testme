@@ -85,11 +85,17 @@ jobs:
             fi
           done
 
-      - name: Upload Artifact
+      - name: Upload diff
         uses: actions/upload-artifact@v2
         with:
           name: diff
           path: ${{ env.CHIVE }}
+      
+      - name: Upload Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: built
+          path: ${{ env.MD }}
 
       - name: Teardown
         run: sandpaper::reset_site()
