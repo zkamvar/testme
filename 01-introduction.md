@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: dd77d3b5d352666db9b77464fbec6b5a
+sandpaper-digest: 1e44308c82c930feba71c29fedb2ad6c
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -10,7 +10,7 @@ exercises: 2
 :::::::::::::::: questions :::::::::::::::::::::
 
 - HOW do you write a lesson using RMarkdown and `{sandpaper}`?
-
+WHAT
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::: objectives ::::::::::::::::::::
@@ -112,7 +112,7 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 
 Cool, right?
 
-HEY PAT e619!
+HEY PAT a07c!
 
 <!-- Please do not delete anything below this line -->
 
