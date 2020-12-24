@@ -15,6 +15,7 @@ jobs:
       ${{ github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' }}
     steps:
+
       - name: 'Download artifact'
         uses: actions/github-script@v3.1.0
         with:
@@ -25,17 +26,42 @@ jobs:
                run_id: ${{github.event.workflow_run.id }},
             });
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "diff"
-            })[0];
-            var download = await github.actions.downloadArtifact({
+              return artifact.name == "diff" || artifact.name == "built"
+            });
+            var diff_download = await github.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
+               artifact_id: matchArtifact[1].id,
                archive_format: 'zip',
             });
+            var built_download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact[0].id,
+               archive_format: 'tar',
+            });
             var fs = require('fs');
-            fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
-      - run: unzip diff.zip
+            fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(diff_download.data));
+            fs.writeFileSync('${{github.workspace}}/built.tar.gz', Buffer.from(built_download.data));
+      - run: |
+        unzip diff.zip
+
+      - name: 'create-diff-branch'
+        uses: actions/checkout@v2.3.4
+        with:
+          ref: md-outputs
+          path: built
+          fetch-depth: 1
+        run:
+          ls -d -A built/* | grep -v '.git' | xargs rm -r
+          tar --strip-comments=1 -C built -xzf built.tar.gz
+          cd built
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git checkout -b md-outputs-PR-$(cat NR)
+          git add -A
+          git commit --allow-empty -m "differences for #""$(cat NR)"
+          git push -u --force --set-upstream origin md-outputs-PR-$(cat NR)
 
       - name: 'Comment on PR'
         uses: actions/github-script@v3
