@@ -85,7 +85,7 @@ jobs:
             fi
           done
           # removing git repo for the built archive.
-          rm -rf .git # remove that GIT!
+          rm -rf .git # a nice message :)
 
       - name: Upload diff
         uses: actions/upload-artifact@v2

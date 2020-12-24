@@ -64,13 +64,18 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
       - name: "Commit and push"
         run: |
-          ls -d -A built/* | grep -v '.git' | xargs rm -r
-          unzip -d built built.zip
           NR=$(cat ./NR)
-          cd built
+          cd built/
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git checkout -b md-outputs-PR-${NR}
+          CURR_HEAD=$(git rev-parse HEAD)
+          git checkout --orphan md-outputs-PR-${NR}
+          git add -A 
+          git commit -m "${{ github.repository }}@${CURR_HEAD}"
+          cd ..
+          ls -d -A built/* | grep -v '.git' | xargs rm -r
+          unzip -d built built.zip
+          cd built
           git add -A
           git commit --allow-empty -m "differences for PR #${NR}"
           git push -u --force --set-upstream origin md-outputs-PR-${NR}
