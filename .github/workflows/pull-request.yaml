@@ -11,20 +11,16 @@ jobs:
       CHIVE: ${{ github.workspace }}/site/chive
       MD: ${{ github.workspace }}/site/built
     steps:
-      - uses: actions/checkout@v2
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT" > Rtifact
+      - name: "Check out main branch"
+        uses: actions/checkout@v2
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+      - name: "Check out staging branch"
+        uses: actions/checkout@v2
         with:
-          name: PR-tifact
-          path: ${{ github.workspace }}/Rtifact
+          ref: md-outputs
+          path: ${{ env.MD }}
 
       - uses: r-lib/actions/setup-r@v1
-
       - uses: r-lib/actions/setup-pandoc@v1
         with:
           pandoc-version: "2.10"
@@ -50,9 +46,6 @@ jobs:
           remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
         shell: Rscript {0}
 
-      - name: Fetch Rendred Markdown
-        run: |
-          git clone --depth 1 -b md-outputs ${{ github.event.repository.git_url }} ${{ env.MD }}
       - name: Generate Diff
         run: |
           git config --local user.email "actions@github.com"
@@ -85,9 +78,9 @@ jobs:
             fi
           done
           # removing git repo for the built archive.
-          rm -rf .git # a nice message :)
+          rm -rf .git # a nice message B)
 
-      - name: Upload diff
+      - name: Upload Diff
         uses: actions/upload-artifact@v2
         with:
           name: diff
