@@ -66,13 +66,14 @@ jobs:
         run: |
           ls -d -A built/* | grep -v '.git' | xargs rm -r
           unzip -d built built.zip
+          NR=$(cat ./NR)
           cd built
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git checkout -b md-outputs-PR-$(cat NR)
+          git checkout -b md-outputs-PR-${NR}
           git add -A
-          git commit --allow-empty -m "differences for PR $(cat NR)"
-          git push -u --force --set-upstream origin md-outputs-PR-$(cat NR)
+          git commit --allow-empty -m "differences for PR \#${NR}"
+          git push -u --force --set-upstream origin md-outputs-PR-${NR}
 
       - name: 'Comment on PR'
         uses: actions/github-script@v3
