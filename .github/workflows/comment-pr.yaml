@@ -62,7 +62,7 @@ jobs:
             });
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
-      - name: "Commit and push"
+      - name: "Create orphan and push"
         run: |
           NR=$(cat ./NR)
           cd built/
@@ -71,7 +71,7 @@ jobs:
           CURR_HEAD=$(git rev-parse HEAD)
           git checkout --orphan md-outputs-PR-${NR}
           git add -A 
-          git commit -m "${{ github.repository }}@${CURR_HEAD}"
+          git commit -m "source commit: ${CURR_HEAD}"
           cd ..
           ls -d -A built/* | grep -v '.git' | xargs rm -r
           unzip -d built built.zip
