@@ -71,7 +71,7 @@ jobs:
           printf "\n\`\`\`diff\n" >> $DIFF
           git diff --staged --compact-summary >> $DIFF
           printf "\n\`\`\`\n" >> $DIFF
-          printf "\n### Per-file Breakdown\n"
+          printf "\n### Per-file Breakdown\n" >> $DIFF
           for FILE in $(git diff --staged --name-only)
           do
             if [ -e ${FILE} ]; then
