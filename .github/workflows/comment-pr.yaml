@@ -15,7 +15,13 @@ jobs:
       ${{ github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: 'Download artifact'
+      - name: 'Checkout md outputs'
+        uses: actions/checkout@v2.3.4
+        with:
+          ref: md-outputs
+          path: built
+          fetch-depth: 1
+      - name: 'Download pr number and diff'
         uses: actions/github-script@v3.1.0
         with:
           script: |
@@ -25,34 +31,42 @@ jobs:
                run_id: ${{github.event.workflow_run.id }},
             });
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "diff" || artifact.name == "built"
-            });
-            var diff_download = await github.actions.downloadArtifact({
+              return artifact.name == "diff"
+            })[0];
+            var download = await github.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
-               artifact_id: matchArtifact[1].id,
+               artifact_id: matchArtifact.id,
                archive_format: 'zip',
             });
-            var built_download = await github.actions.downloadArtifact({
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
+      - run: unzip diff.zip
+      - name: 'Download built'
+        uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            var artifacts = await github.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
                repo: context.repo.repo,
-               artifact_id: matchArtifact[0].id,
-               archive_format: 'tar',
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "built"
+            })[0];
+            var download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
             });
             var fs = require('fs');
-            fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(diff_download.data));
-            fs.writeFileSync('${{github.workspace}}/built.tar.gz', Buffer.from(built_download.data));
-      - run: unzip diff.zip
-      - name: 'Checkout md outputs'
-        uses: actions/checkout@v2.3.4
-        with:
-          ref: md-outputs
-          path: built
-          fetch-depth: 1
+            fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
       - name: "Commit and push"
         run:
           ls -d -A built/* | grep -v '.git' | xargs rm -r
-          tar --strip-comments=1 -C built -xzf built.tar.gz
+          # tar --strip-comments=1 -C built -xzf built.tar.gz
+          unzip -d built built.zip
           cd built
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
