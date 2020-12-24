@@ -57,7 +57,7 @@ jobs:
           git config --local user.name "GitHub Actions"
           git checkout -b md-outputs-PR-$(cat NR)
           git add -A
-          git commit --allow-empty -m 'differences for #'"$(cat NR)"
+          git commit --allow-empty -m "differences for PR $(cat NR)"
           git push -u --force --set-upstream origin md-outputs-PR-$(cat NR)
 
       - name: 'Comment on PR'
