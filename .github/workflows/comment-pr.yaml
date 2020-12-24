@@ -65,7 +65,6 @@ jobs:
       - name: "Commit and push"
         run:
           ls -d -A built/* | grep -v '.git' | xargs rm -r
-          # tar --strip-comments=1 -C built -xzf built.tar.gz
           unzip -d built built.zip
           cd built
           git config --local user.email "actions@github.com"
