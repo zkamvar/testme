@@ -43,12 +43,13 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(diff_download.data));
             fs.writeFileSync('${{github.workspace}}/built.tar.gz', Buffer.from(built_download.data));
       - run: unzip diff.zip
-      - name: 'Create diff branch'
+      - name: 'Checkout md outputs'
         uses: actions/checkout@v2.3.4
         with:
           ref: md-outputs
           path: built
           fetch-depth: 1
+      - name: "Commit and push"
         run:
           ls -d -A built/* | grep -v '.git' | xargs rm -r
           tar --strip-comments=1 -C built -xzf built.tar.gz
