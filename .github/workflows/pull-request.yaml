@@ -13,7 +13,7 @@ jobs:
         run: echo ${{ github.event.action }}
   build-md-source:
     runs-on: macOS-latest
-    # if: ${{ github.event.type != "closed" }}
+    if: ${{ github.event.action != "closed" }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CHIVE: ${{ github.workspace }}/site/chive
