@@ -11,9 +11,10 @@ jobs:
     steps:
       - name: "echo PR number"
         run: echo ${{ github.event.action }}
+      - run: echo ${{ github
   build-md-source:
     runs-on: macOS-latest
-    if: ${{ github.event.action != "closed" }}
+    if: ${{ github.event.action != 'closed' }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CHIVE: ${{ github.workspace }}/site/chive
