@@ -6,8 +6,6 @@ on:
       - main
       - master
 
-name: sandpaper
-
 jobs:
   full-build:
     name: "Build Full Site"
