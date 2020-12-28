@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "echo PR number"
-        run: echo ${{ github.event }}
+        run: cat ${{ github.event }}
   build-md-source:
     runs-on: macOS-latest
     # if: ${{ github.event.type != "closed" }}
