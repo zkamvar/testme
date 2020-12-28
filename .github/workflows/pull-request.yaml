@@ -1,11 +1,18 @@
 on:
   pull_request:
+    [opened, synchronize, reopened, closed]
 
 name: "Receive Pull Request"
 
 jobs:
+  echo-pr-number:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "echo PR number"
+        echo ${{ github.event.number }}
   build-md-source:
     runs-on: macOS-latest
+    if: ${{ github.event.type != "closed" }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CHIVE: ${{ github.workspace }}/site/chive
