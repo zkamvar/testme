@@ -13,4 +13,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Let it all out'
-        run: echo ${{ github.event.workflow_run.conclusion }} 
+        run: echo ${{ toJSON(github) }} 
