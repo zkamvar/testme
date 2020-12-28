@@ -1,9 +1,6 @@
 on:
-  pull_request: 
-   - opened
-   - synchronize
-   - reopened
-   - closed
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 name: "Receive Pull Request"
 
