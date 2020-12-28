@@ -18,6 +18,7 @@ jobs:
       github.event.workflow_run.conclusion == 'closed' }}
     steps:
       - name: 'remove PR branch'
+        run: echo ${{ github.event.workflow_run.conclusion }} 
   upload:
     runs-on: ubuntu-latest
     if: >
