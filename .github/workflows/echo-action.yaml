@@ -1,0 +1,16 @@
+name: Comment on the pull request
+
+# read-write repo token
+# access to secrets
+on:
+  workflow_run:
+    workflows: ["Receive Pull Request"]
+      types: '*'
+
+jobs:
+  shout:
+    name: "Shout"
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Let it all out'
+        run: echo ${{ github.event.workflow_run.conclusion }} 

@@ -3,8 +3,6 @@ name: Comment on the pull request
 # read-write repo token
 # access to secrets
 on:
-  # label:
-  #   types: [deleted]
   workflow_run:
     workflows: ["Receive Pull Request"]
     types:
@@ -12,14 +10,16 @@ on:
 
 jobs:
   delete:
+    name: "Remove PR branch"
     runs-on: ubuntu-latest
     if: > 
       ${{ github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'closed' }}
+      github.event.workflow_run.conclusion == '' }}
     steps:
       - name: 'remove PR branch'
         run: echo ${{ github.event.workflow_run.conclusion }} 
   upload:
+    name: "Upload PR changes to branch"
     runs-on: ubuntu-latest
     if: >
       ${{ github.event.workflow_run.event == 'pull_request' &&
