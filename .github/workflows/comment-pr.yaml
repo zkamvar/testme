@@ -12,8 +12,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      env: GHC: ${{ toJSON(github) }}
-      run: echo "${GHC}"
+      - name: Print github context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
   upload:
     name: "Upload PR changes to branch"

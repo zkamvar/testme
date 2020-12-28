@@ -1,4 +1,4 @@
-name: Comment on the pull request
+name: Echo PR
 
 # read-write repo token
 # access to secrets
@@ -12,5 +12,7 @@ jobs:
     name: "Shout"
     runs-on: ubuntu-latest
     steps:
-      - name: 'Let it all out'
-        run: echo ${{ toJSON(github) }} 
+      - name: Print github context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"

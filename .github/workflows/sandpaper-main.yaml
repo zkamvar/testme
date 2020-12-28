@@ -1,3 +1,5 @@
+name: "Deploy"
+
 on:
   push:
     branches:
@@ -8,6 +10,7 @@ name: sandpaper
 
 jobs:
   full-build:
+    name: "Build Full Site"
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
