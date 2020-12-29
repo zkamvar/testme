@@ -1,7 +1,7 @@
 name: "Check for actions modification"
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       [opened, synchronize, reopened]
 
@@ -14,25 +14,11 @@ jobs:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
       - name: Query Files Changed
-        id: pr-files
-        uses: octokit/graphql-action@v2.2.1
-        with:
-          query: |
-            query pr($owner:String!, $name:String!, $pr:Int!) {
-              repository(owner:$owner, name:$repo) {
-                pullRequest(number:$pr) {
-                  files() {
-                    nodes {
-                      path
-                    }
-                  }
-                }
-              }
-            }
-          owner: ${{ github.event.repository.owner.name }}
-          repo: ${{ github.event.repository.name }}
-          pr: ${{ github.event.number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-      - run: "echo ${{ toJSON(steps.pr-files.outputs.data) }}"
-
+        run: |
+          if [[ $(git status --staged --names-only | grep '^.github') -ne 0 ]]; then
+            echo '::error .github files must not be modified'
+            exit 1
+          else
+            exit 0
+          fi
+          
