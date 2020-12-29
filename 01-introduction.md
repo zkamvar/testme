@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: dd77d3b5d352666db9b77464fbec6b5a
+sandpaper-digest: bcbaa18e2a8ee3b4543e98da04f81aa9
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -25,7 +25,7 @@ exercises: 2
 This is the new Carpentries template. It is written in [RMarkdown][r-markdown],
 which is a variant of Markdown that allows you to render code inside the
 lesson. Please refer to the [lesson
-example](https://carpentries.github.io/lesson-example) for full documentation.
+example](https://carpentries.github.io/lesson-example/) for full documentation.
 
 What you need to know is that there are three block quotes required for a valid
 Carpentries lesson template:
@@ -100,7 +100,7 @@ pie(
 )
 ```
 
-<img src="fig/01-introduction-pyramid-1.png" title="plot of chunk pyramid" alt="plot of chunk pyramid" style="display: block; margin: auto;" />
+<img src="fig/01-introduction-rendered-pyramid-1.png" title="plot of chunk pyramid" alt="plot of chunk pyramid" style="display: block; margin: auto;" />
 
 
 # Math
@@ -112,7 +112,7 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 
 Cool, right?
 
-HEY PAT 0631!
+HEY PAT f7d8!
 
 <!-- Please do not delete anything below this line -->
 
