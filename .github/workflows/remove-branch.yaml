@@ -41,8 +41,14 @@ jobs:
               return artifact.name == "NR"
             })[0];
             if (typeof matchArtifact === 'undefined') {
-              return false
+              return false;
             }
+            var download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/NR.zip', Buffer.from(download.data));
       - run: unzip NR.zip
@@ -52,9 +58,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var PR_ref= Number(fs.readFileSync('./NR'));
-            # var id = await github.git.deleteRef({
-            #   owner: context.repo.owner,
-            #   repo: context.repo.repo,
-            #   ref: PR_ref
-            # });
+            const expected = /^md[-]outputs[-]PR[-]\d/;
+            if (!expected.test(PR_ref)) {
+              return false;
+            }
+            var id = await github.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: PR_ref
+            });
             console.log(PR_ref)
