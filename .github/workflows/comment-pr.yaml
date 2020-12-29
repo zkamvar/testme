@@ -57,7 +57,7 @@ jobs:
       - name: Check PR status
         run: |
           NR=$(cat ./NR)
-          URI="https://api.github.com/${{ github.event.owner }}/${{ github.event.repo }}/pulls/${NR}/"
+          URI="https://api.github.com/${{ github.repository }}/pulls/${NR}/"
           MERGED=$(curl -sI -H ${URI}/merge | grep -c 'status: 404')
           if [[ ${MERGED} -ne 1 ]]; then
             # unmerged exit
