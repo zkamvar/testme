@@ -63,8 +63,8 @@ jobs:
             # this will avoid accidentally deleting important branches
             const expected = /md[-]outputs[-]PR[-]\d/;
             if (!expected.test(PR_ref)) {
-              throw PR_ref + " " + "is not a valid :ref"
-              return false;
+              console.log(PR_ref);
+              throw 'invalid ref';
             }
             var id = await github.git.deleteRef({
               owner: context.repo.owner,
