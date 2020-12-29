@@ -1,0 +1,16 @@
+name: "Check for actions modification"
+
+on:
+  pull_request_target:
+    types:
+      [opened, synchronize, reopened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print github context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
