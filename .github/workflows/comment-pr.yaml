@@ -54,6 +54,19 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
       - run: unzip diff.zip
+      - name: Check PR status
+        run: |
+          NR=$(cat ./NR)
+          URI="https://api.github.com/${{ github.event.owner }}/${{ github.event.repo }}/pulls/${NR}/"
+          MERGED=$(curl -sI -H ${URI}/merge | grep -c 'status: 404')
+          if [[ ${MERGED} -ne 1 ]]; then
+            # unmerged exit
+            exit 1  
+          fi
+          FILES=$(curl -sH ${URI}/files))
+          echo ${FILES}
+          exit 1
+          
       - name: 'Download built'
         uses: actions/github-script@v3.1.0
         with:
