@@ -47,7 +47,7 @@ part of the html page.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: instructor
 
-This is an instructor aside, in the future, you should be able to hide this
+This is an instructor aside, in the future, you should be able to hide this!
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
