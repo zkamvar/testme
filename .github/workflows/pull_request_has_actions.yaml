@@ -13,4 +13,24 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
+      - name: Query Files Changed
+        id: pr-files
+        uses: octokit/graphql-action@v2.2.1
+        with:
+          query: |
+            query {
+              repository(owner:$owner, name:$repo) {
+                pullRequest(number:Int($pr)) {
+                  files() {
+                    nodes {
+                      path
+                    }
+                  }
+                }
+              }
+            }
+          owner: ${{ github.event.repository.owner.name }}
+          repo: ${{ github.event.repository.name }}
+          pr: ${{ github.event.number }}
+        - run: "echo ${{ toJSON(steps.pr-files.outputs.data) }}"
 
