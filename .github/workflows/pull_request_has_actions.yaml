@@ -18,9 +18,9 @@ jobs:
         uses: octokit/graphql-action@v2.2.1
         with:
           query: |
-            query {
+            query pr($owner:String!, $name:String!, $pr:Int!) {
               repository(owner:$owner, name:$repo) {
-                pullRequest(number:Int($pr)) {
+                pullRequest(number:$pr) {
                   files() {
                     nodes {
                       path
@@ -32,5 +32,7 @@ jobs:
           owner: ${{ github.event.repository.owner.name }}
           repo: ${{ github.event.repository.name }}
           pr: ${{ github.event.number }}
-        - run: "echo ${{ toJSON(steps.pr-files.outputs.data) }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      - run: "echo ${{ toJSON(steps.pr-files.outputs.data) }}"
 
