@@ -4,15 +4,10 @@ on:
   pull_request:
     types:
       [opened, synchronize, reopened]
+    paths-ignore:
+      - '.github/**'
 
 jobs:
-  echo-pr-number:
-    name: "Echo PR conclusion"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "echo PR number"
-        run: echo ${{ github.event.action }}
-
   build-md-source:
     name: "Build Markdown Source Files"
     runs-on: macOS-latest
