@@ -29,7 +29,7 @@ Carpentries lesson template:
 
  1. `questions` These are displayed at the beginning of the episode to prime the
     learner for the content.
- 2. `objectives` These are the learning objectives for an episode
+ 2. `objectives` These are the learning objectives for an episode.
  3. `keypoints` These are displayed at the end of the episode to reinforce the
     objectives.
 
