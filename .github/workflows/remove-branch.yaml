@@ -61,6 +61,8 @@ jobs:
             var PR_ref= Number(fs.readFileSync('./NR'));
             const expected = /^md[-]outputs[-]PR[-]\d/;
             if (!expected.test(PR_ref)) {
+              console.log("BUMMER");
+              console.log(PR_ref);
               return false;
             }
             var id = await github.git.deleteRef({
