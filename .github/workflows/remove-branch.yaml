@@ -57,6 +57,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            var fs = require('fs');
             var PR_ref= Number(fs.readFileSync('./NR'));
             const expected = /^md[-]outputs[-]PR[-]\d/;
             if (!expected.test(PR_ref)) {
