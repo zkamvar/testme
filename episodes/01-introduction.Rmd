@@ -76,7 +76,7 @@ paste("This", "new", "template", "looks", "good")
 
 ## Nest Solution
  
-You can add a line with at least three colons and a `solution` tag.
+You can add a line with at least three colons `:::` and a `solution` tag.
 
 :::::::::::::::::::::::::::::::::
 ::::::::::::::::::::::::::::::::::::::::::::::::
