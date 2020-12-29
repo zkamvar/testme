@@ -14,7 +14,7 @@ jobs:
       - name: "Create PRtifact"
         run: |
           mkdir -p ./pr
-          printf heads/md-outputs-PR-${{ github.event.number }} > ./pr/NR
+          printf heads/md-outputs-PR-1 > ./pr/NR
       - name: Upload Diff
         uses: actions/upload-artifact@v2
         with:
