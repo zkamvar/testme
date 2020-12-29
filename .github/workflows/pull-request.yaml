@@ -22,7 +22,10 @@ jobs:
 
       - name: "Test that no .github/** files have changed?"
         run: |
-          if [[ $(git diff --staged --name-only | grep -c '^.github') == 0 ]]; then
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git status
+          if [[ $(git diff --staged --name-only | grep -c '^.github') -ne 0 ]]; then
             exit 0
           else
             echo ::error "github actions scripts must NOT be modified"
