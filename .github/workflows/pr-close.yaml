@@ -16,6 +16,6 @@ jobs:
       - name: Upload Diff
         uses: actions/upload-artifact@v2
         with:
-          name: branch-to-close
+          name: NR
           path: ./NR
 
