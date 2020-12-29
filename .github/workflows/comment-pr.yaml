@@ -64,7 +64,7 @@ jobs:
             # unmerged exit
             exit 1  
           fi
-          FILES=$(curl -sH ${URI}/files))
+          FILES=$(curl -sH ${URI}/files)
           echo ${FILES}
           exit 1
           
