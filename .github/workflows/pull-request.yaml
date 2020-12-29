@@ -4,8 +4,8 @@ on:
   pull_request:
     types:
       [opened, synchronize, reopened]
-    paths-ignore:
-      - '.github/**'
+    paths:
+      - !'.github/**'
 
 jobs:
   build-md-source:
