@@ -26,7 +26,7 @@ jobs:
             exit 0
           else
             echo "::error github actions scripts must NOT be modified"
-            exit 1
+            exit 0
           fi
 
       - name: "Check out staging branch"
