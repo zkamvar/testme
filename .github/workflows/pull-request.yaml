@@ -20,6 +20,15 @@ jobs:
       - name: "Check out main branch"
         uses: actions/checkout@v2
 
+      - name: "Test that no .github/** files have changed"
+        run: |
+          if [[ $(git diff --staged --name-only | grep -c '^.github') == 0 ]]; then
+            exit 0
+          else
+            echo ::error "github actions scripts must NOT be modified"
+            exit 1
+          fi
+
       - name: "Check out staging branch"
         uses: actions/checkout@v2
         with:

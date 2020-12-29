@@ -52,17 +52,18 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
       - run: unzip pr.zip
-      - name: 'Get Number'
+      - name: 'Check and remove branch'
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var fs = require('fs');
             var PR_ref= String(fs.readFileSync('./NR'));
+            # we expect the branch to contain md-outputs-PR-{number}
+            # this will avoid accidentally deleting important branches
             const expected = /md[-]outputs[-]PR[-]\d/;
             if (!expected.test(PR_ref)) {
-              console.log("BUMMER");
-              console.log(PR_ref);
+              throw PR_ref + " " + "is not a valid :ref"
               return false;
             }
             var id = await github.git.deleteRef({

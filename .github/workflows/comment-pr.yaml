@@ -21,7 +21,7 @@ jobs:
     name: "Upload PR changes to branch"
     runs-on: ubuntu-latest
     if: >
-      ${{ false && github.event.workflow_run.event == 'pull_request' &&
+      ${{ github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: 'Checkout md outputs'
@@ -37,11 +37,14 @@ jobs:
             var artifacts = await github.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
                repo: context.repo.repo,
-               run_id: ${{github.event.workflow_run.id }},
+               run_id: ${{ github.event.workflow_run.id }},
             });
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "diff"
             })[0];
+            if (typeof matchArtifact === 'undefined') {
+              throw "no diff produced"
+            }
             var download = await github.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
@@ -63,6 +66,9 @@ jobs:
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "built"
             })[0];
+            if (typeof matchArtifact === 'undefined') {
+              throw "no markdown built"
+            }
             var download = await github.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
