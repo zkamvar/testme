@@ -58,7 +58,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var fs = require('fs');
-            var PR_ref= Number(fs.readFileSync('./NR'));
+            var PR_ref= String(fs.readFileSync('./NR'));
             const expected = /^md[-]outputs[-]PR[-]\d/;
             if (!expected.test(PR_ref)) {
               console.log("BUMMER");
