@@ -39,7 +39,7 @@ part of the html page.
 
 :::::::::::::::: keypoints :::::::::::::::::::::
 
-- Use `.Rmd` files for lessons even if you don't need to generate any code
+- Use `.Rmd` files for lessons even if you don't need to generate any cooooooooooooode
 - Run `sandpaper::check_lesson()` to identify any issues with your lesson
 - Run `sandpaper::build_lesson()` to preview your lesson locally
 
