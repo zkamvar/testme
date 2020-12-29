@@ -18,7 +18,7 @@ setup instructions, you can use a `solution` tag.
 
 ## For Windows
 
-Use PuTTY
+Use Git Bash
 
 :::::::::::::::::::::::::
 
