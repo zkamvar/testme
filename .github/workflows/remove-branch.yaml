@@ -59,7 +59,7 @@ jobs:
           script: |
             var fs = require('fs');
             var PR_ref= String(fs.readFileSync('./NR'));
-            const expected = /^md[-]outputs[-]PR[-]\d/;
+            const expected = RegExp('^heads[/]md[-]outputs[-]PR[-]\d')
             if (!expected.test(PR_ref)) {
               console.log("BUMMER");
               console.log(PR_ref);
