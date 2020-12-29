@@ -13,6 +13,8 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
+      - name: Check out PR
+        uses: actions/checkout@v2
       - name: Query Files Changed
         run: |
           if [[ $(git status --staged --names-only | grep '^.github') -ne 0 ]]; then
