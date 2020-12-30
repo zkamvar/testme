@@ -61,18 +61,10 @@ jobs:
           URI="https://api.github.com/repos/${{ github.repository }}/pulls/${NR}"
           echo ${URI}
           MERGED=$(curl -sIH "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
-          echo ${MERGED}
-          if [[ ${MERGED} -ne 1 ]]; then
-            echo "Pull Request Merged: ${URI}"
-            valid=false
-          else
-            valid=true
-          fi
-          echo ${valid}
+          echo "MERGED STATUS: ${MERGED}"
           FILES=$(curl -H "Accept:application/vnd.github.v3+json" "${URI}/files" | grep -c "\"filename\": \".github/")
-          echo ${FILES}
-          if [[ ${FILES} -ne 0 ]]; then
-            echo ".github/ files were modified"
+          echo ".github files: ${FILES}"
+          if [ ${FILES} -ne 0 ] && [ ${MERGED} -ne 1 ]; then
             valid=false
           else
             valid=true
