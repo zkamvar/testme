@@ -65,10 +65,11 @@ jobs:
           echo "MERGED STATUS: ${MERGE_STAT}"
           FILES=$(curl -sH "${ACCEPT}" "${URI}/files")
           echo ".github files: ${FILES}"
-          NO_FILES=$(echo ${FILES} | grep '"message": "Not Found"')
-          GH_FILES=$(echo ${FILES} | grep '"filename": ".github')
+          NO_FILES=true
+          GH_FILES=''
+          # NO_FILES=$(echo ${FILES} | grep "\"message\": \"Not Found\"")
+          # GH_FILES=$(echo ${FILES} | grep '"filename": ".github')
           MERGED=$(echo ${MERGE_STAT} | grep 'status: 202')
-          echo what's up
           if [ ${NO_FILES} ] || [ ${GH_FILES} ] || [ ${MERGED} ]; then
             echo "Invalid PR Number (${NR}):\n"
             if [ ${NO_FILES} ]; then echo "No files in the PR"; fi
