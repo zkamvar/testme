@@ -75,8 +75,9 @@ jobs:
         id: file-check
         if: ${{ steps.pr-status.outputs.UNMERGED }}
         run: |
-          files=${{ !contains(join(fromJSON(steps.pr-status.outputs.FILES).*.filename), '.github/') }}
-          echo "::set-output name=PASS::${files}"
+          files=${{ fromJSON(steps.pr-status.outputs.FILES) }}
+          # echo ${{ toJSON(files) }}
+          echo "::set-output name=PASS::false"
           
       - name: 'Download built'
         if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
