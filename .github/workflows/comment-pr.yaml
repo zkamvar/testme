@@ -58,16 +58,21 @@ jobs:
         id: pr-status
         run: |
           NR=$(cat ./NR)
-          URI="https://api.github.com/${{ github.repository }}/pulls/${NR}"
+          URI="https://api.github.com/repos/${{ github.repository }}/pulls/${NR}"
+          echo ${URI}
           MERGED=$(curl -sIH "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
           if [[ ${MERGED} -ne 1 ]]; then
             valid=false
           else
             valid=true
           fi
-            echo "::set-output name=UNMERGED::${valid}"
+          echo "::set-output name=UNMERGED::${valid}"
+          echo "${valid}"
           FILES=$(curl -sH "Accept:application/vnd.github.v3+json" ${URI}/files)
           echo ${FILES}
+          FILES=${{ fromJSON(${FILES}) }}
+          echo "${{ startsWith(${FILES}.*.filename, '.github') }}"
+          
           
       - name: 'Download built'
         if: ${{ steps.pr-status.outputs.UNMERGED }}
