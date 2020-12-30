@@ -62,7 +62,8 @@ jobs:
           echo ${URI}
           MERGED=$(curl -sIH "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
           echo "MERGED STATUS: ${MERGED}"
-          FILES=$(curl -H "Accept:application/vnd.github.v3+json" "${URI}/files" | grep -c "\"filename\": \".github/")
+          # FILES=$(curl -H "Accept:application/vnd.github.v3+json" "${URI}/files" | grep -c "\"filename\": \".github/")
+          FILES=0
           echo ".github files: ${FILES}"
           if [ ${FILES} -ne 0 ] && [ ${MERGED} -ne 1 ]; then
             valid=false
