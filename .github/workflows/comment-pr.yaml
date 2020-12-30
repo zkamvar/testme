@@ -59,13 +59,20 @@ jobs:
         run: |
           NR=$(cat ./NR)
           URI="https://api.github.com/repos/${{ github.repository }}/pulls/${NR}"
+          ACCEPT="Accept:application/vnd.github.v3+json"
           echo ${URI}
-          MERGED=$(curl -sIH "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
-          echo "MERGED STATUS: ${MERGED}"
-          # FILES=$(curl -H "Accept:application/vnd.github.v3+json" "${URI}/files" | grep -c "\"filename\": \".github/")
-          FILES=0
+          MERGE_STAT=$(curl -sIH "${ACCEPT}" "${URI}/merge")
+          echo "MERGED STATUS: ${MERGE_STAT}"
+          FILES=$(curl -sH "${ACCEPT}" "${URI}/files")
           echo ".github files: ${FILES}"
-          if [ ${FILES} -ne 0 ] || [ ${MERGED} -ne 1 ]; then
+          NO_FILES=$(echo ${FILES} | grep '"message": "Not Found"')
+          GH_FILES=$(echo ${FILES} | grep '"filename": ".github')
+          MERGED=$(echo ${MERGE_STAT} | grep 'status: 202')
+          if [ ${NO_FILES} ] || [ ${GH_FILES} ] || [ ${MERGED} ]; then
+            echo "Invalid PR Number (${NR}):\n"
+            if [ ${NO_FILES} ]; then echo "No files in the PR"; fi
+            if [ ${GH_FILES} ]; then echo "workflow files in the PR:\n${GH_FILES}"; fi
+            if [ ${MERGED} ];   then echo "PR already merged"; fi
             valid=false
           else
             valid=true
