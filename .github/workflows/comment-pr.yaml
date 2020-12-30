@@ -62,25 +62,22 @@ jobs:
           echo ${URI}
           MERGED=$(curl -sIH "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
           if [[ ${MERGED} -ne 1 ]]; then
+            echo "Pull Request Merged: ${URI}"
             valid=false
           else
             valid=true
           fi
-          echo "::set-output name=UNMERGED::${valid}"
-          echo "${valid}"
-          FILES=$(curl -sH "Accept:application/vnd.github.v3+json" ${URI}/files)
-          echo "${FILES}"
-          echo "::set-output name=FILES::${FILES}"
-      - name: Check Files
-        id: file-check
-        if: ${{ steps.pr-status.outputs.UNMERGED }}
-        run: |
-          files=${{ fromJSON(steps.pr-status.outputs.FILES) }}
-          echo ${files}
-          echo "::set-output name=PASS::false"
+          FILES=$(curl -sH "Accept:application/vnd.github.v3+json" ${URI}/files | grep -c '"filename": ".github/')
+          if [[ ${FILES} -ne 0 ]]; then
+            echo ".github/ files were modified"
+            valid=false
+          else
+            valid=true
+          fi
+          echo "::set-output name=VALID::${valid}"
           
       - name: 'Download built'
-        if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
+        if: ${{ steps.pr-status.outputs.VALID }}
         uses: actions/github-script@v3.1.0
         with:
           script: |
@@ -104,7 +101,7 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
       - name: "Create orphan and push"
-        if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
+        if: ${{ steps.pr-status.outputs.VALID }}
         run: |
           NR=$(cat ./NR)
           cd built/
@@ -123,7 +120,7 @@ jobs:
           git push -u --force --set-upstream origin md-outputs-PR-${NR}
 
       - name: 'Comment on PR'
-        if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
+        if: ${{ steps.pr-status.outputs.VALID }}
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
