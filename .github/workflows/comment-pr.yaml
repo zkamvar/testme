@@ -55,20 +55,22 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
       - run: unzip diff.zip
       - name: Check PR status
+        id: pr-status
         run: |
           NR=$(cat ./NR)
           URI="https://api.github.com/${{ github.repository }}/pulls/${NR}"
-          echo "curl -sIH \"Accept:application/vnd.github.v3+json\" ${URI}/merge"
-          MERGED=$(curl -sI -H "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
+          MERGED=$(curl -sIH "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
           if [[ ${MERGED} -ne 1 ]]; then
-            # unmerged exit
-            exit 1  
+            valid=false
+          else
+            valid=true
           fi
-          FILES=$(curl -sH ${URI}/files)
+            echo "::set-output name=UNMERGED::${valid}"
+          FILES=$(curl -sH "Accept:application/vnd.github.v3+json" ${URI}/files)
           echo ${FILES}
-          exit 1
           
       - name: 'Download built'
+        if: ${{ steps.pr-status.outputs.UNMERGED }}
         uses: actions/github-script@v3.1.0
         with:
           script: |
@@ -92,6 +94,7 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
       - name: "Create orphan and push"
+        if: ${{ steps.pr-status.outputs.UNMERGED }}
         run: |
           NR=$(cat ./NR)
           cd built/
@@ -110,6 +113,7 @@ jobs:
           git push -u --force --set-upstream origin md-outputs-PR-${NR}
 
       - name: 'Comment on PR'
+        if: ${{ steps.pr-status.outputs.UNMERGED }}
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
