@@ -70,13 +70,13 @@ jobs:
           echo "::set-output name=UNMERGED::${valid}"
           echo "${valid}"
           FILES=$(curl -sH "Accept:application/vnd.github.v3+json" ${URI}/files)
+          echo "${FILES}"
           echo "::set-output name=FILES::${FILES}"
       - name: Check Files
         id: file-check
         run: |
           files=${{ !contains(join(fromJSON(steps.pr-status.outputs.FILES).*.filename), '.github/') }}
           echo "::set-output name=PASS::${files}"
-          
           
       - name: 'Download built'
         if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
