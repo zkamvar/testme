@@ -76,7 +76,7 @@ jobs:
         if: ${{ steps.pr-status.outputs.UNMERGED }}
         run: |
           files=${{ fromJSON(steps.pr-status.outputs.FILES) }}
-          # echo ${{ toJSON(files) }}
+          echo ${files}
           echo "::set-output name=PASS::false"
           
       - name: 'Download built'
