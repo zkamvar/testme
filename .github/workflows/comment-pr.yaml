@@ -57,7 +57,7 @@ jobs:
       - name: Check PR status
         run: |
           NR=$(cat ./NR)
-          URI="https://api.github.com/${{ github.repository }}/pulls/${NR}/"
+          URI="https://api.github.com/${{ github.repository }}/pulls/${NR}"
           echo "curl -sIH \"Accept:application/vnd.github.v3+json\" ${URI}/merge"
           MERGED=$(curl -sI -H "Accept:application/vnd.github.v3+json" "${URI}/merge" | grep -c 'status: 404')
           if [[ ${MERGED} -ne 1 ]]; then
