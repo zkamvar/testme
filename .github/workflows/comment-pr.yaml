@@ -68,6 +68,7 @@ jobs:
           NO_FILES=$(echo ${FILES} | grep '"message": "Not Found"')
           GH_FILES=$(echo ${FILES} | grep '"filename": ".github')
           MERGED=$(echo ${MERGE_STAT} | grep 'status: 202')
+          echo what's up
           if [ ${NO_FILES} ] || [ ${GH_FILES} ] || [ ${MERGED} ]; then
             echo "Invalid PR Number (${NR}):\n"
             if [ ${NO_FILES} ]; then echo "No files in the PR"; fi
@@ -75,9 +76,10 @@ jobs:
             if [ ${MERGED} ];   then echo "PR already merged"; fi
             valid=false
           else
+            echo "VALID"
             valid=true
           fi
-          echo ${valid}
+          echo "echo"
           echo "::set-output name=VALID::${valid}"
           exit 0
           
