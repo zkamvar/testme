@@ -69,7 +69,7 @@ jobs:
             valid=true
           fi
           echo ${valid}
-          FILES=$(curl -sH "Accept:application/vnd.github.v3+json" "${URI}/files" | grep -c "\"filename\": \".github/")
+          FILES=$(curl -H "Accept:application/vnd.github.v3+json" "${URI}/files" | grep -c "\"filename\": \".github/")
           echo ${FILES}
           if [[ ${FILES} -ne 0 ]]; then
             echo ".github/ files were modified"
