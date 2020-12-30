@@ -78,7 +78,6 @@ jobs:
           # fi
           echo "echo"
           echo "::set-output name=VALID::${valid}"
-          exit 0
           
       - name: 'Download built'
         if: ${{ steps.pr-status.outputs.VALID }}
