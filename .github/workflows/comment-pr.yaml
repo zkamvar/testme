@@ -55,6 +55,7 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
       - run: unzip diff.zip
       - name: Check PR status
+        if: ${{ steps.pr-status.outputs.UNMERGED }}
         id: pr-status
         run: |
           NR=$(cat ./NR)
@@ -69,13 +70,16 @@ jobs:
           echo "::set-output name=UNMERGED::${valid}"
           echo "${valid}"
           FILES=$(curl -sH "Accept:application/vnd.github.v3+json" ${URI}/files)
-          echo ${FILES}
-          FILES=${{ fromJSON(${FILES}) }}
-          echo "${{ startsWith(${FILES}.*.filename, '.github') }}"
+          echo "::set-output name=FILES::${FILES}"
+      - name: Check Files
+        id: file-check
+        run: |
+          files=${{ !contains(join(fromJSON(steps.pr-status.outputs.FILES).*.filename), '.github/') }}
+          echo "::set-output name=PASS::${files}"
           
           
       - name: 'Download built'
-        if: ${{ steps.pr-status.outputs.UNMERGED }}
+        if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
         uses: actions/github-script@v3.1.0
         with:
           script: |
@@ -99,7 +103,7 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
       - name: "Create orphan and push"
-        if: ${{ steps.pr-status.outputs.UNMERGED }}
+        if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
         run: |
           NR=$(cat ./NR)
           cd built/
@@ -118,7 +122,7 @@ jobs:
           git push -u --force --set-upstream origin md-outputs-PR-${NR}
 
       - name: 'Comment on PR'
-        if: ${{ steps.pr-status.outputs.UNMERGED }}
+        if: ${{ steps.pr-status.outputs.UNMERGED && steps.file-check.output.PASS }}
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
