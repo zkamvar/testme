@@ -60,6 +60,7 @@ jobs:
         with:
           pr: $(cat ./PR)
           repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Error if invalid'
         id: invalid-error
         if: ${{ !steps.pr-status.outputs.VALID }}
