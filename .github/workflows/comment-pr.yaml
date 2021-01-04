@@ -53,17 +53,23 @@ jobs:
             });
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
-      - run: unzip diff.zip
+      - name: unzip and set output
+        id: get-pr
+        run: |
+          unzip diff.zip
+          PR=$(cat ./NR)
+          echo "::set-output name=PR::${PR}"
       - name: Check PR status
         id: pr-status
+        if: ${{ steps.get-pr.outputs.PR }}
         uses: zkamvar/check-valid-pr@main
         with:
-          pr: $(cat ./PR)
+          pr: ${{ steps.get-pr.outputs.PR }}
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Error if invalid'
         id: invalid-error
-        if: ${{ !steps.pr-status.outputs.VALID }}
+        if: ${{ !steps.get-pr.outputs.PR || !steps.pr-status.outputs.VALID }}
         run: |
           echo "Pull Request Invalid"
           exit 1
