@@ -56,7 +56,7 @@ jobs:
       - run: unzip diff.zip
       - name: Check PR status
         id: pr-status
-        uses: zkamvar/check-pr@main
+        uses: zkamvar/check-valid-pr@main
         with:
           pr: $(cat ./PR)
           repo: ${{ github.repository }}
