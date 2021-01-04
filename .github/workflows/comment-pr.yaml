@@ -56,29 +56,16 @@ jobs:
       - run: unzip diff.zip
       - name: Check PR status
         id: pr-status
+        uses: zkamvar/check-pr@main
+        with:
+          pr: $(cat ./PR)
+          repo: ${{ github.repository }}
+      - name: 'Error if invalid'
+        id: invalid-error
+        if: ${{ !steps.pr-status.outputs.VALID }}
         run: |
-          NR=$(cat ./NR)
-          URI="https://api.github.com/repos/${{ github.repository }}/pulls/${NR}"
-          ACCEPT="Accept:application/vnd.github.v3+json"
-          echo ${URI}
-          MERGE_STAT=$(curl -sIH "${ACCEPT}" "${URI}/merge")
-          FILES=$(curl -sH "${ACCEPT}" "${URI}/files")
-          NO_FILES=$(echo ${FILES} | grep -c "\"message\": \"Not Found\"")
-          GH_FILES=$(echo ${FILES} | grep -c '"filename": ".github')
-          MERGED=$(echo ${MERGE_STAT} | grep -c 'status: 202')
-          # if [ ${NO_FILES} -ne 0 ] || [ ${GH_FILES} -ne 0 ] || [ ${MERGED} -ne 0 ]; then
-          #   echo "Invalid PR Number (${NR}):\n"
-          # if [ ${NO_FILES} -ne 0 ]; then echo "No files in the PR"; fi
-          # if [ ${GH_FILES} -ne 0 ]; then echo "workflow files in the PR:\n${GH_FILES}"; fi
-          # if [ ${MERGED}   -ne 0 ]; then echo "PR already merged"; fi
-          valid=false
-          # else
-          #   echo "VALID"
-          # #   valid=true
-          # fi
-          echo "echo"
-          echo "::set-output name=VALID::${valid}"
-          
+          echo "Pull Request Invalid"
+          exit 1
       - name: 'Download built'
         if: ${{ steps.pr-status.outputs.VALID }}
         uses: actions/github-script@v3.1.0
