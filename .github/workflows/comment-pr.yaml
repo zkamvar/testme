@@ -66,10 +66,11 @@ jobs:
         with:
           pr: ${{ steps.get-pr.outputs.PR }}
           repo: ${{ github.repository }}
+          sha: ${{ github.event.workflow_run.head_commit.id }} 
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Error if invalid'
         id: invalid-error
-        if: ${{ !steps.get-pr.outputs.PR || !steps.pr-status.outputs.VALID }}
+        if: ${{ !steps.pr-status.outputs.VALID }}
         run: |
           echo "Pull Request Invalid"
           exit 1
