@@ -40,6 +40,11 @@ jobs:
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
+      - name: Install dependencies
+        run: |
+          remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
+        shell: Rscript {0}
+
       - name: Cache R packages
         uses: actions/cache@v2
         with:
@@ -47,18 +52,16 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install dependencies
-        run: |
-          remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
-        shell: Rscript {0}
-
-      - name: Build Markdown
+      - name: Build Site
+        id: build-site
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           Rscript -e 'sandpaper::build_lesson()'
 
-      - name: Generate Comment
+      - name: Generate Commit
+        id: generate-commit
+        run: |
           mkdir -p ${{ env.CHIVE }}
           echo ${{ github.event.number }} > ${{ env.CHIVE }}/NR
           DIFF=${{ env.CHIVE }}/diff.md
@@ -71,7 +74,7 @@ jobs:
           printf "\n\`\`\`\n" >> $DIFF
           printf ":eyes: :heavy_check_mark: [Inspect the Differences](https://github.com/${{ github.repository }}/compare/md-outputs..md-outputs-${{ github.event.number }})"
           # removing git repo for the built archive.
-          rm -rf .git # a nice message B)
+          rm -rf .git
 
       - name: Upload Diff
         uses: actions/upload-artifact@v2
