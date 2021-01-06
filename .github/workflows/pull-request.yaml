@@ -70,7 +70,7 @@ jobs:
           printf "\n\`\`\`diff\n" >> $DIFF
           git diff --staged --compact-summary >> $DIFF
           printf "\n\`\`\`\n" >> $DIFF
-          printf ":eyes: :heavy_check_mark: [Inspect the Differences](https://github.com/${{ github.repository }}/compare/md-outputs..md-outputs-${{ github.event.number }})"
+          printf "\n:eyes: :heavy_check_mark: [Inspect the Differences](https://github.com/${{ github.repository }}/compare/md-outputs..md-outputs-PR-${{ github.event.number }})\n" >> ${DIFF}
           # removing git repo for the built archive.
           rm -rf .git
 
