@@ -4,6 +4,8 @@ on:
   pull_request:
     types:
       [opened, synchronize, reopened]
+    paths:
+      - !'.github/**'
 
 jobs:
   build-md-source:
@@ -50,17 +52,16 @@ jobs:
           remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
         shell: Rscript {0}
 
-      - name: Generate Diff
+      - name: Build Markdown
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           Rscript -e 'sandpaper::build_lesson()'
+
+      - name: Generate Comment
           mkdir -p ${{ env.CHIVE }}
           echo ${{ github.event.number }} > ${{ env.CHIVE }}/NR
           DIFF=${{ env.CHIVE }}/diff.md
-          DEETS1="\n<details>\n<summary>"
-          DEETS2="</summary>\n\n\`\`\`\`\`diff\n"
-          DEETS3="\n\`\`\`\`\`\n\n</details>\n" >> $DIFF
           cd ${{ env.MD }}
           git add -A .
           printf "### Rendered Changes\n\n" > $DIFF
@@ -68,19 +69,7 @@ jobs:
           printf "\n\`\`\`diff\n" >> $DIFF
           git diff --staged --compact-summary >> $DIFF
           printf "\n\`\`\`\n" >> $DIFF
-          printf "\n### Per-file Breakdown\n" >> $DIFF
-          for FILE in $(git diff --staged --name-only)
-          do
-            if [ -e ${FILE} ]; then
-              printf ${DEETS1} >> ${DIFF}
-              printf "Click here for diff of ${FILE}" >> ${DIFF}
-              printf ${DEETS2} >> ${DIFF}
-              # TODO: check for images here and either put a link to the URL of
-              # the preview, show the new image or... something else
-              git diff --staged --oneline $FILE >> $DIFF
-              printf ${DEETS3} >> ${DIFF}
-            fi
-          done
+          printf ":eyes: :heavy_check_mark: [Inspect the Differences](https://github.com/${{ github.repository }}/compare/md-outputs..md-outputs-${{ github.event.number }})"
           # removing git repo for the built archive.
           rm -rf .git # a nice message B)
 
