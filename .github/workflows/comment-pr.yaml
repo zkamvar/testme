@@ -127,16 +127,17 @@ jobs:
             var issue_number = Number(fs.readFileSync('./NR'));
             var body = String(fs.readFileSync('./diff.md', {encoding:'utf8', flag:'r'}));
             // I think this needs pagination... an until statement. 
-            var issue_comments = [ 'hello' ];
+            var issue_comments;
             var myBot = -1;
+            var bots;
             do
-              var issue_comments = await github.issues.listComments({
+              issue_comments = await github.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue_number
               });
-              var bots = issue_comments.map(item => item.type === "bot" && item.user.login == "github-actions[bot]");
-              var myBot = bots.indexOf(true);
+              bots = issue_comments.map(item => item.type === "bot" && item.user.login == "github-actions[bot]");
+              myBot = bots.indexOf(true);
             while(myBot > 0 || issue_comments.length == 0);
             
             if (myBot > 0) {
