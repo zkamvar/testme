@@ -51,6 +51,7 @@ jobs:
           sha: ${{ github.events.workflow_run.head_commit.sha }}
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
   show-outputs:
     name: "Show Outputs"
     runs-on: ubuntu-latest
@@ -142,7 +143,7 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       ${{ needs.test-pr.outputs.is_valid == 'false' &&
-      needs.test-pr.outputs.payload }}
+      needs.test-pr.outputs.payload.status == '200' }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
     steps:
