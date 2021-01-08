@@ -13,6 +13,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CHIVE: ${{ github.workspace }}/site/chive
+      PR: ${{ github.workspace }}/site/pr
       MD: ${{ github.workspace }}/site/built
     steps:
       - name: "Check out main branch"
@@ -61,7 +62,8 @@ jobs:
         id: generate-commit
         run: |
           mkdir -p ${{ env.CHIVE }}
-          echo ${{ github.event.number }} > ${{ env.CHIVE }}/NR
+          mkdir -p ${{ env.PR }}
+          echo ${{ github.event.number }} > ${{ env.PR }}/NR
           DIFF=${{ env.CHIVE }}/diff.md
           cd ${{ env.MD }}
           git add -A .
@@ -73,6 +75,12 @@ jobs:
           printf "\n\`\`\`\n" >> $DIFF
           # removing git repo for the built archive.
           rm -rf .git
+
+      - name: Upload PR
+        uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: ${{ env.PR }}
 
       - name: Upload Diff
         uses: actions/upload-artifact@v2
