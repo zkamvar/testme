@@ -121,7 +121,7 @@ jobs:
           repo: ${{ github.repository }}
           name: 'diff'
           token: ${{ secrets.GITHUB_TOKEN }}
-      - run: ls -larth ${{ github.workspace }}
+      - run: unzip ${{ github.workspace }}/diff.zip
       - name: "Comment on PR"
         id: comment-diff
         uses: zkamvar/actions/comment-diff@main
