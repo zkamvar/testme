@@ -124,7 +124,7 @@ jobs:
       - name: "Get message body"
         id: get-body
         run: |
-          unzip built.zip
+          unzip diff.zip
           echo "::set-output name=BODY::$(cat ./diff.md)"
 
       - name: "Comment on PR"
@@ -137,11 +137,11 @@ jobs:
           body: ${{ steps.get-body.outputs.BODY}}
 
   comment-changed-workflow:
-    name: "Comment on PR with changed workflow"
+    name: "Comment Changed Workflow"
     needs: test-pr
     runs-on: ubuntu-latest
     if: >
-      ${{ needs.test-pr.outputs.is_valid == 'true' &&
+      ${{ needs.test-pr.outputs.is_valid == 'false' &&
       needs.test-pr.outputs.payload }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
