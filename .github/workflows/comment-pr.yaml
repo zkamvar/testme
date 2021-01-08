@@ -122,12 +122,6 @@ jobs:
           name: 'diff'
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Get message body"
-        id: get-body
-        run: |
-          unzip diff.zip
-          echo "::set-output name=BODY::$(<./diff.md)"
-
       - name: "Comment on PR"
         id: comment-diff
         uses: zkamvar/actions/comment-diff@main
@@ -135,15 +129,14 @@ jobs:
           pr: ${{ env.NR }} 
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ${{ steps.get-body.outputs.BODY}}
+          path: ${{ github.workspace }}/diff.md
 
   comment-changed-workflow:
     name: "Comment Changed Workflow"
     needs: test-pr
     runs-on: ubuntu-latest
     if: >
-      ${{ needs.test-pr.outputs.is_valid == 'false' &&
-      needs.test-pr.outputs.payload.status == '200' }}
+      ${{ needs.test-pr.outputs.is_valid == 'false' }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
     steps:
