@@ -17,12 +17,48 @@ jobs:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
 
-  upload:
-    name: "Upload PR changes to branch"
+  test-pr:
+    name: "Test if pull request is valid"
     runs-on: ubuntu-latest
     if: >
       ${{ github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      is_valid: ${{ steps.check-pr.output.VALID }}
+      payload: ${{ steps.check-pr.output.payload }}
+      number: ${{ steps.get-pr.NUM }}
+    steps:
+      - name: 'Download PR artifact'
+        uses: zkamvar/actions/download-workflow-artifact@main
+        with:
+          run: ${{ github.event.workflow_run.id }}
+          dir: ${{ github.workspace }}
+          repo: ${{ github.repository }}
+          name: 'pr'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Get PR Number"
+        id: get-pr
+        run: |
+          unzip pr.zip
+          echo "::set-output name=NUM::$(cat ./NUM)"
+      
+      - name: "Check PR"
+        id: check-pr
+        uses: zkamvar/actions/check-valid-pr@main
+        with:
+          pr: ${{ steps.get-pr.outputs.NUM }}
+          sha: ${{ github.events.workflow_run.head_commit.sha }}
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  create-branch:
+    name: "Create Git Branch"
+    needs: test-pr
+    runs-on: ubuntu-latest
+    if: ${{ needs.test-pr.outputs.is_valid == 'true' }}
+    env:
+      NR: ${{ needs.test-pr.outputs.number }}
     steps:
       - name: 'Checkout md outputs'
         uses: actions/checkout@v2.3.4
@@ -30,78 +66,20 @@ jobs:
           ref: md-outputs
           path: built
           fetch-depth: 1
-      - name: 'Download pr number and diff'
-        uses: actions/github-script@v3.1.0
+
+      - name: 'Download built markdown'
+        uses: zkamvar/actions/download-workflow-artifact@main
         with:
-          script: |
-            var artifacts = await github.actions.listWorkflowRunArtifacts({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               run_id: ${{ github.event.workflow_run.id }},
-            });
-            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "diff"
-            })[0];
-            if (typeof matchArtifact === 'undefined') {
-              throw "no diff produced"
-            }
-            var download = await github.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
-            });
-            var fs = require('fs');
-            fs.writeFileSync('${{github.workspace}}/diff.zip', Buffer.from(download.data));
-      - name: unzip and set output
-        id: get-pr
-        run: |
-          unzip diff.zip
-          PR=$(cat ./NR)
-          echo "::set-output name=PR::${PR}"
-      - name: Check PR status
-        id: pr-status
-        if: ${{ steps.get-pr.outputs.PR }}
-        uses: zkamvar/check-valid-pr@main
-        with:
-          pr: ${{ steps.get-pr.outputs.PR }}
+          run: ${{ github.event.workflow_run.id }}
+          dir: ${{ github.workspace }}
           repo: ${{ github.repository }}
-          sha: ${{ github.event.workflow_run.head_commit.id }} 
+          name: 'built'
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Error if invalid'
-        id: invalid-error
-        if: ${{ !steps.pr-status.outputs.VALID }}
-        run: |
-          echo "Pull Request Invalid"
-          exit 1
-      - name: 'Download built'
-        if: ${{ steps.pr-status.outputs.VALID }}
-        uses: actions/github-script@v3.1.0
-        with:
-          script: |
-            var artifacts = await github.actions.listWorkflowRunArtifacts({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               run_id: ${{github.event.workflow_run.id }},
-            });
-            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "built"
-            })[0];
-            if (typeof matchArtifact === 'undefined') {
-              throw "no markdown built"
-            }
-            var download = await github.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
-            });
-            var fs = require('fs');
-            fs.writeFileSync('${{github.workspace}}/built.zip', Buffer.from(download.data));
+
+      - run: unzip built.zip
+
       - name: "Create orphan and push"
-        if: ${{ steps.pr-status.outputs.VALID }}
         run: |
-          NR=$(cat ./NR)
           cd built/
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
@@ -117,43 +95,54 @@ jobs:
           git commit --allow-empty -m "differences for PR #${NR}"
           git push -u --force --set-upstream origin md-outputs-PR-${NR}
 
-      - name: 'Comment on PR'
-        if: ${{ steps.pr-status.outputs.VALID }}
-        uses: actions/github-script@v3
+  comment-pr:
+    name: "Comment on Pull Request"
+    needs: [test-pr, create-branch]
+    runs-on: ubuntu-latest
+    if: ${{ needs.test-pr.outputs.is_valid == 'true' }}
+    env:
+      NR: ${{ needs.test-pr.outputs.number }}
+    steps:
+      - name: 'Download comment artifact'
+        uses: zkamvar/actions/download-workflow-artifact@main
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            var fs = require('fs');
-            var issue_number = Number(fs.readFileSync('./NR'));
-            var body = String(fs.readFileSync('./diff.md', {encoding:'utf8', flag:'r'}));
-            // I think this needs pagination... an until statement. 
-            var issue_comments;
-            var myBot = -1;
-            var bots;
-            do {
-              issue_comments = await github.issues.listComments({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue_number
-              });
-              bots = issue_comments.map(item => item.type === "bot" && item.user.login == "github-actions[bot]");
-              myBot = bots.indexOf(true);
-            }
-            while(myBot > 0 || issue_comments.length == 0);
-            
-            if (myBot > 0) {
-              var id = await github.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: issue_comments[myBot].id, 
-                body: body 
-              });
-            } else {
-              var id = await github.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue_number,
-                body: body 
-              });
-            }
-            console.log(id)
+          run: ${{ github.event.workflow_run.id }}
+          dir: ${{ github.workspace }}
+          repo: ${{ github.repository }}
+          name: 'diff'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Get message body"
+        id: get-body
+        run: |
+          unzip built.zip
+          echo "::set-output name=BODY::$(cat ./diff.md)"
+
+      - name: "Comment on PR"
+        id: comment-diff
+        uses: zkamvar/actions/comment-diff@main
+        with:
+          pr: ${{ env.NR }} 
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: ${{ steps.get-body.outputs.BODY}}
+
+  comment-changed-workflow:
+    name: "Comment on PR with changed workflow"
+    needs: test-pr
+    runs-on: ubuntu-latest
+    if: >
+      ${{ needs.test-pr.outputs.is_valid == 'true' &&
+      needs.test-pr.outputs.payload }}
+    env:
+      NR: ${{ needs.test-pr.outputs.number }}
+    steps:
+      - name: "Comment on PR"
+        id: comment-diff
+        uses: zkamvar/actions/comment-diff@main
+        with:
+          pr: ${{ env.NR }} 
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: "Pull Request contains modified workflows; no preview will be created."
+   
