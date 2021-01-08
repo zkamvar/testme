@@ -26,7 +26,7 @@ jobs:
     outputs:
       is_valid: ${{ steps.check-pr.output.VALID }}
       payload: ${{ steps.check-pr.output.payload }}
-      number: ${{ steps.get-pr.NUM }}
+      number: ${{ steps.get-pr.output.NUM }}
     steps:
       - name: 'Download PR artifact'
         uses: zkamvar/actions/download-workflow-artifact@main
@@ -51,6 +51,15 @@ jobs:
           sha: ${{ github.events.workflow_run.head_commit.sha }}
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
+  show-outputs:
+    name: "Show Outputs"
+    runs-on: ubuntu-latest
+    needs: test-pr
+    steps:
+      - run: |
+          echo ${{ needs.test-pr.outputs.is_valid }}
+          echo ${{ needs.test-pr.outputs.number }}
+          echo ${{ needs.test-pr.outputs.payload }}
 
   create-branch:
     name: "Create Git Branch"
