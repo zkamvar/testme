@@ -21,8 +21,7 @@ exercises: 2
 
 This is the new Carpentries template. It is written in [RMarkdown][r-markdown],
 which is a variant of Markdown that allows you to render code inside the
-lesson. Please refer to the [lesson
-example](https://carpentries.github.io/lesson-example/) for full documentation.
+lesson. Please refer to the [lessonexample](https://carpentries.github.io/lesson-example/) for full documentation.
 
 What you need to know is that there are three block quotes required for a valid
 Carpentries lesson template:
@@ -89,7 +88,7 @@ You can also include figures:
 pie(
   c(Sky = 78, "Sunny side of pyramid" = 17, "Shady side of pyramid" = 5), 
   init.angle = 315, 
-  col = c("firebrick", "wheat", "wheat3"), 
+  col = c("firebrick", "gold", "goldenrod"), 
   border = FALSE
 )
 ```
