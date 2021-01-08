@@ -30,6 +30,13 @@ jobs:
         with:
           pandoc-version: "2.10"
 
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -43,13 +50,6 @@ jobs:
         run: |
           remotes::install_github('carpentries/sandpaper', dependencies = TRUE)
         shell: Rscript {0}
-
-      - name: Cache R packages
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Build Site
         id: build-site
