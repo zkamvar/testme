@@ -41,7 +41,7 @@ jobs:
         id: get-pr
         run: |
           unzip pr.zip
-          echo "::set-output name=NUM::$(cat ./NR)"
+          echo "::set-output name=NUM::$(<./NR)"
       
       - name: "Check PR"
         id: check-pr
@@ -126,7 +126,7 @@ jobs:
         id: get-body
         run: |
           unzip diff.zip
-          echo "::set-output name=BODY::$(cat ./diff.md)"
+          echo "::set-output name=BODY::$(<./diff.md)"
 
       - name: "Comment on PR"
         id: comment-diff
