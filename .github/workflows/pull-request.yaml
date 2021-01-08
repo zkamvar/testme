@@ -68,8 +68,9 @@ jobs:
           cd ${{ env.MD }}
           git add -A .
           printf "### Rendered Changes\n\n" > $DIFF
-          printf "\n:mag: Inspect the changes: https://github.com/${{ github.repository }}/compare/md-outputs..md-outputs-PR-${{ github.event.number }})\n" >> ${DIFF}
-          printf "The following changes were observed in the rendered markdown documents\n" >> $DIFF
+          printf "\n:mag: Inspect the changes: https://github.com/${{ github.repository }}/compare/md-outputs..md-outputs-PR-${{ github.event.number }}\n" >> ${DIFF}
+          printf "\n---\n" >> $DIFF
+          printf "\nThe following changes were observed in the rendered markdown documents\n" >> $DIFF
           printf "\n\`\`\`diff\n" >> $DIFF
           git diff --staged --compact-summary >> $DIFF
           printf "\n\`\`\`\n" >> $DIFF
