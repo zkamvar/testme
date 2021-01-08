@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: bcbaa18e2a8ee3b4543e98da04f81aa9
+sandpaper-digest: 9fd39790aea8a2b1c769555d667d34af
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -95,7 +95,7 @@ You can also include figures:
 pie(
   c(Sky = 78, "Sunny side of pyramid" = 17, "Shady side of pyramid" = 5), 
   init.angle = 315, 
-  col = c("firebrick", "wheat", "wheat3"), 
+  col = c("firebrick", "lavenderblush", "lavender"), 
   border = FALSE
 )
 ```
@@ -112,7 +112,7 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 
 Cool, right?
 
-HEY PAT f7d8!
+HEY PAT e2cc!
 
 <!-- Please do not delete anything below this line -->
 
