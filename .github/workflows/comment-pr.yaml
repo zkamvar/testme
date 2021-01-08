@@ -121,7 +121,7 @@ jobs:
           repo: ${{ github.repository }}
           name: 'diff'
           token: ${{ secrets.GITHUB_TOKEN }}
-
+      - run: ls -larth ${{ github.workspace }}
       - name: "Comment on PR"
         id: comment-diff
         uses: zkamvar/actions/comment-diff@main
@@ -136,7 +136,7 @@ jobs:
     needs: test-pr
     runs-on: ubuntu-latest
     if: >
-      ${{ needs.test-pr.outputs.is_valid == 'false' }}
+      ${{ !needs.test-pr.outputs.is_valid }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
     steps:
