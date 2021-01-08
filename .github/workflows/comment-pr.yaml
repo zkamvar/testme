@@ -135,8 +135,7 @@ jobs:
     name: "Comment Changed Workflow"
     needs: test-pr
     runs-on: ubuntu-latest
-    if: >
-      ${{ !needs.test-pr.outputs.is_valid }}
+    if: ${{ needs.test-pr.outputs.is_valid != 'true' }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
     steps:
