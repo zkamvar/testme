@@ -24,9 +24,9 @@ jobs:
       ${{ github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' }}
     outputs:
-      is_valid: ${{ steps.check-pr.output.VALID }}
-      payload: ${{ steps.check-pr.output.payload }}
-      number: ${{ steps.get-pr.output.NUM }}
+      is_valid: ${{ steps.check-pr.outputs.VALID }}
+      payload: ${{ steps.check-pr.outputs.payload }}
+      number: ${{ steps.get-pr.outputs.NUM }}
     steps:
       - name: 'Download PR artifact'
         uses: zkamvar/actions/download-workflow-artifact@main
