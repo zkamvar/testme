@@ -17,6 +17,10 @@ jobs:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
 
+  # Pull requests are valid if:
+  #  - they match the sha of the workflow run head commit
+  #  - they are open
+  #  - no .github files were committed
   test-pr:
     name: "Test if pull request is valid"
     runs-on: ubuntu-latest
@@ -32,10 +36,7 @@ jobs:
         uses: zkamvar/actions/download-workflow-artifact@main
         with:
           run: ${{ github.event.workflow_run.id }}
-          dir: ${{ github.workspace }}
-          repo: ${{ github.repository }}
           name: 'pr'
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Get PR Number"
         id: get-pr
@@ -49,8 +50,6 @@ jobs:
         with:
           pr: ${{ steps.get-pr.outputs.NUM }}
           sha: ${{ github.events.workflow_run.head_commit.sha }}
-          repo: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
 
   show-outputs:
     name: "Show Outputs"
@@ -62,6 +61,10 @@ jobs:
           echo ${{ needs.test-pr.outputs.number }}
           echo ${{ needs.test-pr.outputs.payload }}
 
+  # Create an orphan branch on this repository with two commits
+  #  - the current HEAD of the md-outputs branch
+  #  - the output from running the current HEAD of the pull request through
+  #    the md generator
   create-branch:
     name: "Create Git Branch"
     needs: test-pr
@@ -81,10 +84,7 @@ jobs:
         uses: zkamvar/actions/download-workflow-artifact@main
         with:
           run: ${{ github.event.workflow_run.id }}
-          dir: ${{ github.workspace }}
-          repo: ${{ github.repository }}
           name: 'built'
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: unzip built.zip
 
@@ -105,6 +105,7 @@ jobs:
           git commit --allow-empty -m "differences for PR #${NR}"
           git push -u --force --set-upstream origin md-outputs-PR-${NR}
 
+  # Comment on the Pull Request with a link to the branch and the diff
   comment-pr:
     name: "Comment on Pull Request"
     needs: [test-pr, create-branch]
@@ -117,25 +118,26 @@ jobs:
         uses: zkamvar/actions/download-workflow-artifact@main
         with:
           run: ${{ github.event.workflow_run.id }}
-          dir: ${{ github.workspace }}
-          repo: ${{ github.repository }}
           name: 'diff'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - run: unzip ${{ github.workspace }}/diff.zip
+
       - name: "Comment on PR"
         id: comment-diff
         uses: zkamvar/actions/comment-diff@main
         with:
           pr: ${{ env.NR }} 
-          repo: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
           path: ${{ github.workspace }}/diff.md
 
+  # Comment if the PR is open and matches the SHA, but the workflow files have
+  # changed
   comment-changed-workflow:
     name: "Comment Changed Workflow"
     needs: test-pr
     runs-on: ubuntu-latest
-    if: ${{ needs.test-pr.outputs.is_valid != 'true' }}
+    if: >
+      ${{ needs.test-pr.outputs.is_valid != 'true' && 
+      needs.test-pr.outputs.payload }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
     steps:
@@ -144,7 +146,5 @@ jobs:
         uses: zkamvar/actions/comment-diff@main
         with:
           pr: ${{ env.NR }} 
-          repo: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
           body: "Pull Request contains modified workflows; no preview will be created."
    
