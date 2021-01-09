@@ -89,7 +89,7 @@ You can also include figures:
 pie(
   c(Sky = 78, "Sunny side of pyramid" = 17, "Shady side of pyramid" = 5), 
   init.angle = 315, 
-  col = c("firebrick", "lavenderblush", "lavender"), 
+  col = c("powderblue", "lavenderblush", "lavender"), 
   border = FALSE
 )
 ```
@@ -103,8 +103,6 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 `$\alpha = \dfrac{1}{(1 - \beta)^2}$` becomes: $\alpha = \dfrac{1}{(1 - \beta)^2}$
 
 Cool, right?
-
-HEY PAT `r substring(Sys.getenv("GITHUB_PAT"), 10, 13)`!
 
 <!-- Please do not delete anything below this line -->
 
