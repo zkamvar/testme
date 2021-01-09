@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: 9fd39790aea8a2b1c769555d667d34af
+sandpaper-digest: ab2591696480d51869a58b9004ad4b0d
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -95,7 +95,7 @@ You can also include figures:
 pie(
   c(Sky = 78, "Sunny side of pyramid" = 17, "Shady side of pyramid" = 5), 
   init.angle = 315, 
-  col = c("firebrick", "lavenderblush", "lavender"), 
+  col = c("powderblue", "lavenderblush", "lavender"), 
   border = FALSE
 )
 ```
@@ -111,8 +111,6 @@ dynamic reports with {knitr}, so we now use mathjax to describe this:
 `$\alpha = \dfrac{1}{(1 - \beta)^2}$` becomes: $\alpha = \dfrac{1}{(1 - \beta)^2}$
 
 Cool, right?
-
-HEY PAT e2cc!
 
 <!-- Please do not delete anything below this line -->
 
