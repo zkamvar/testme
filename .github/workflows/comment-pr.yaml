@@ -135,13 +135,12 @@ jobs:
     name: "Comment Changed Workflow"
     needs: test-pr
     runs-on: ubuntu-latest
-    if: >
-      ${{ needs.test-pr.outputs.is_valid != 'true' && 
-      needs.test-pr.outputs.payload }}
+    if: ${{ needs.test-pr.outputs.is_valid != 'true' }}
     env:
       NR: ${{ needs.test-pr.outputs.number }}
     steps:
       - name: "Comment on PR"
+        if: ${{ needs.test-pr.outputs.payload }}
         id: comment-diff
         uses: zkamvar/actions/comment-diff@main
         with:
