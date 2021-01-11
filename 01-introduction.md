@@ -1,5 +1,5 @@
 ---
-sandpaper-digest: ab2591696480d51869a58b9004ad4b0d
+sandpaper-digest: c769029ec32b878fa6ce2daf985ca9bd
 sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
 
 title: "Using RMarkdown"
@@ -95,7 +95,7 @@ You can also include figures:
 pie(
   c(Sky = 78, "Sunny side of pyramid" = 17, "Shady side of pyramid" = 5), 
   init.angle = 315, 
-  col = c("powderblue", "lavenderblush", "lavender"), 
+  col = c("powderblue", "lemonchiffon", "lavender"), 
   border = FALSE
 )
 ```
