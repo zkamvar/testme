@@ -1,6 +1,6 @@
 ---
 title: "Using RMarkdown"
-teaching: 10
+teaching: 50
 exercises: 2
 ---
 
