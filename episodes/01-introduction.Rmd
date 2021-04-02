@@ -83,6 +83,13 @@ You can add a line with at least three colons and a `solution` tag.
 
 # Figures
 
+:::::::::::::::: callout
+
+Did you know you can include a figure manually?
+
+:::::::::
+:::::::::::
+
 You can also include figures:
 
 ```{r pyramid}
