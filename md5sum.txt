@@ -1,0 +1,8 @@
+"file" "checksum" "built"
+"/Users/runner/work/testme/testme/CODE_OF_CONDUCT.md" "8d9e44dd5c39f241b5e8b47ecfc802d1" "/Users/runner/work/testme/testme/site/built/CODE_OF_CONDUCT.md"
+"/Users/runner/work/testme/testme/LICENSE.md" "afaf427b4223952624dcb6d8ded53ec0" "/Users/runner/work/testme/testme/site/built/LICENSE.md"
+"/Users/runner/work/testme/testme/index.md" "ecd5759b1a3a7c4307897e23c552bda8" "/Users/runner/work/testme/testme/site/built/index.md"
+"/Users/runner/work/testme/testme/episodes/01-introduction.Rmd" "c769029ec32b878fa6ce2daf985ca9bd" "/Users/runner/work/testme/testme/site/built/01-introduction.md"
+"/Users/runner/work/testme/testme/instructors/test.md" "cadc3176914d2cdb1f448155487c0ea5" "/Users/runner/work/testme/testme/site/built/test.md"
+"/Users/runner/work/testme/testme/learners/Setup.md" "5f398840df593a66fb0ce01fab503185" "/Users/runner/work/testme/testme/site/built/Setup.md"
+"/Users/runner/work/testme/testme/profiles/test.md" "648f6aed89d03eb936a02af11a6ff530" "/Users/runner/work/testme/testme/site/built/test.md"

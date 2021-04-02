@@ -1,7 +1,4 @@
 ---
-sandpaper-digest: c769029ec32b878fa6ce2daf985ca9bd
-sandpaper-source: /Users/runner/work/testme/testme/episodes/01-introduction.Rmd
-
 title: "Using RMarkdown"
 teaching: 10
 exercises: 2

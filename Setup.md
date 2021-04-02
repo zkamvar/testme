@@ -1,7 +1,4 @@
 ---
-sandpaper-digest: 5f398840df593a66fb0ce01fab503185
-sandpaper-source: /Users/runner/work/testme/testme/learners/Setup.md
-
 title: Setup
 ---
 
